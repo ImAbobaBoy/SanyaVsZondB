@@ -1,0 +1,10 @@
+C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\bin\Debug\SanyaVsZondB.exe.config
+C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\bin\Debug\SanyaVsZondB.exe
+C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\bin\Debug\SanyaVsZondB.pdb
+C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.csproj.AssemblyReference.cache
+C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.Form1.resources
+C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.Properties.Resources.resources
+C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.csproj.GenerateResource.cache
+C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.csproj.CoreCompileInputs.cache
+C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.exe
+C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.pdb
