@@ -2,6 +2,7 @@
 using SanyaVsZondB.Model;
 using SanyaVsZondB.View;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -23,7 +24,8 @@ namespace SanyaVsZondB
             Point = Game.Player.Position; // Инициализация целевой позиции
             Controller = new Controller(this, Point, Game);
             Controller.InitializeKeyHandling();
-            this.MouseDown += MouseClick;
+
+            Game.Player.PropertyChanged += Player_PropertyChanged;
         }
 
         private void DrawCircle(Graphics g, int x, int y, int width, int height)
@@ -33,29 +35,36 @@ namespace SanyaVsZondB
             brush.Dispose();
         }
 
-        private void MouseClick(object sender, MouseEventArgs e)
-        {
-            Controller.Shoot(sender, e);
-        }
-
         protected override void OnPaint(PaintEventArgs e)
         {
             if (Game.ZondBs.Count > 0)
                 foreach (var zondB in Game.ZondBs)
                 { 
-                    DrawZombie(e.Graphics, (int)(zondB.Position.X - zondB.HitboxRadius), (int)(zondB.Position.Y - zondB.HitboxRadius), (int)zondB.HitboxRadius * 2, (int)zondB.HitboxRadius * 2);
+                    DrawZombie(e.Graphics, 
+                        (int)(zondB.Position.X - zondB.HitboxRadius), 
+                        (int)(zondB.Position.Y - zondB.HitboxRadius), 
+                        (int)zondB.HitboxRadius * 2, 
+                        (int)zondB.HitboxRadius * 2);
                 }
 
             if (Game.Bullets.Count > 0)
                 foreach (var bullet in Game.Bullets)
                 {
-                    DrawBullet(e.Graphics, (int)(bullet.Position.X - bullet.HitboxRadius), (int)(bullet.Position.Y - bullet.HitboxRadius), (int)bullet.HitboxRadius * 2, (int)bullet.HitboxRadius * 2);
+                    DrawBullet(e.Graphics, 
+                        (int)(bullet.Position.X - bullet.HitboxRadius), 
+                        (int)(bullet.Position.Y - bullet.HitboxRadius), 
+                        (int)bullet.HitboxRadius * 2, 
+                        (int)bullet.HitboxRadius * 2);
                 }
 
             if (Game.Flowers.Count > 0)
                 foreach(var flower in Game.Flowers)
                 {
-                    DrawFlower(e.Graphics, (int)(flower.Position.X - flower.HitboxRadius), (int)(flower.Position.Y - flower.HitboxRadius), (int)flower.HitboxRadius * 2, (int)flower.HitboxRadius * 2);
+                    DrawFlower(e.Graphics, 
+                        (int)(flower.Position.X - flower.HitboxRadius), 
+                        (int)(flower.Position.Y - flower.HitboxRadius), 
+                        (int)flower.HitboxRadius * 2, 
+                        (int)flower.HitboxRadius * 2);
                 }
 
             base.OnPaint(e);
@@ -91,6 +100,25 @@ namespace SanyaVsZondB
         {
             Game.Player.Target = new Model.Point(Cursor.Position.X, Cursor.Position.Y);
             this.Invalidate();   
+        }
+
+        private void SwitchForm(Form newForm)
+        {
+            this.Hide();
+            newForm.Show();
+        }
+
+        private void Player_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsAlive")
+            {
+                SwitchForm(new MainMenuForm());
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

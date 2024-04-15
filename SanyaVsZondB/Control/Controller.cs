@@ -33,6 +33,12 @@ namespace SanyaVsZondB.Control
         public void InitializeKeyHandling()
         {
             View.KeyDown += View_KeyDown;
+            View.MouseDown += MouseClick;
+        }
+
+        private void MouseClick(object sender, MouseEventArgs e)
+        {
+            Shoot(sender, e);
         }
 
         public void UpdateZombiePositions(object sender, EventArgs e)

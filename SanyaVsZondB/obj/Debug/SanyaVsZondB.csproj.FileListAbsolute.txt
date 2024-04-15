@@ -8,3 +8,4 @@ C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\
 C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.csproj.CoreCompileInputs.cache
 C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.exe
 C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.pdb
+C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.MainMenuForm.resources

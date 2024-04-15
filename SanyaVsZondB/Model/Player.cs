@@ -1,6 +1,7 @@
 ﻿using SanyaVsZondB.View;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Deployment.Application;
 using System.Drawing;
 using System.Linq;
@@ -10,17 +11,30 @@ using System.Windows.Forms;
 
 namespace SanyaVsZondB.Model
 {
-    public class Player : Entity, IObservable
+    public class Player : Entity, IObservable, INotifyPropertyChanged
     {
-        public Weapon Weapon {  get; private set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public Weapon Weapon { get; private set; }
         public List<ZondB> ZondBs { get; private set; }
         public List<Bullet> Bullets { get; private set; }
+        public bool IsAlive {  
+            get { return IsAlive;  }
+            private set
+            {
+                if (isAlive != value)
+                {
+                    isAlive = value;
+                    OnPropertyChanged(nameof(IsAlive));
+                }
+            }
+        }
         public override int Hp { get; set; }
         public override Point Target { get; set; }
         public override double Speed { get; set; }
         public override double HitboxRadius { get; set; }
         public override Point Position { get; set; }
         private List<IObserver> observers = new List<IObserver>();
+        private bool isAlive = true;
 
         public Player(
             int hp,
@@ -67,7 +81,7 @@ namespace SanyaVsZondB.Model
 
         public override void Die()
         {
-            throw new NotImplementedException();
+            IsAlive = false;
         }
 
         public override string GetImageFileName()
@@ -89,6 +103,11 @@ namespace SanyaVsZondB.Model
         {
             foreach (var observer in observers)
                 observer.Update(this);
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
