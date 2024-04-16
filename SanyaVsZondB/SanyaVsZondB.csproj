@@ -47,6 +47,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Control\Controller.cs" />
+    <Compile Include="Model\Pistol.cs" />
+    <Compile Include="View\SecondLevelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\SecondLevelForm.Designer.cs">
+      <DependentUpon>SecondLevelForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\MainMenuForm.cs">
       <SubType>Form</SubType>
     </Compile>

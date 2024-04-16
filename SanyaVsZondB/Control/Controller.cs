@@ -6,13 +6,13 @@ namespace SanyaVsZondB.Control
 {
     public class Controller
     {
-        public Form1 View { get; private set; }
+        public Form View { get; private set; }
         public Point Point { get; private set; }
         public Map Game {  get; private set; }
         public Timer ZondBMoveTimer { get; private set; }
         private int count = 0;
 
-        public Controller(Form1 view, Point point, Map game)
+        public Controller(Form view, Point point, Map game)
         {
             View = view;
             Point = point;

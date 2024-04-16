@@ -62,6 +62,15 @@ namespace SanyaVsZondB
                 tabPage1.Controls.Add(firstTabForm);
                 firstTabForm.Show();
             }
+            if (tabControl1.SelectedIndex == 0)
+            {
+                var secondTabForm = new SecondLevelForm();
+                secondTabForm.TopLevel = false;
+                secondTabForm.FormBorderStyle = FormBorderStyle.None;
+                secondTabForm.Dock = DockStyle.Fill;
+                tabPage1.Controls.Add(secondTabForm);
+                secondTabForm.Show();
+            }
         }
 
         private void SwitchForm(Form newForm)

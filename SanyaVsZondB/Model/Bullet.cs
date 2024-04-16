@@ -45,7 +45,6 @@ namespace SanyaVsZondB.Model
                     zondB.TakeDamage(Damage);
                     Die();
                     return true;
-                    break;
                 }
             return false;
         }

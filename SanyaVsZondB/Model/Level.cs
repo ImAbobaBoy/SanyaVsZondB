@@ -26,7 +26,7 @@ namespace SanyaVsZondB.Model
             PlayerSpeed = playerSpeed;
             ZondBHp = zondBHp;
             PlayerHp = playerHp;
-            StartWeapon = new Weapon("Pistol", 10);
+            StartWeapon = new Pistol(100, 3, 20, 3);
             Player = new Player(playerHp, new Point(0, 0), playerSpeed, 50, new Point(300, 300), StartWeapon, new List<Bullet>(), new List<ZondB>());
         }
     }

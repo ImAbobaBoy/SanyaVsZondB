@@ -19,6 +19,7 @@ namespace SanyaVsZondB.Model
         public override double HitboxRadius { get; set; }
         public override Point Position { get; set; }
         public List<Flower> Flowers { get; private set; }
+        public Map Map { get; private set; }
         private List<IObserver> observers = new List<IObserver>();
 
         public ZondB(
@@ -29,12 +30,14 @@ namespace SanyaVsZondB.Model
             int damage,
             Player player,
             List<ZondB> zondBS,
-            List<Flower> flowers) : base(hp, player.Target, speed, hitbox, position)
+            List<Flower> flowers,
+            Map map) : base(hp, player.Target, speed, hitbox, position)
         {
             Damage = damage;
             Player = player;
             ZondBS = zondBS;
             Flowers = flowers;
+            Map = map;
         }
 
         public void Hit()
@@ -73,6 +76,7 @@ namespace SanyaVsZondB.Model
 
         public override void Die()
         {
+            Map.IncrementCounKilledZondB();
             ZondBS.Remove(this);
         }
 

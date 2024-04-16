@@ -8,17 +8,17 @@ using System.Windows.Forms;
 
 namespace SanyaVsZondB
 {
-    public partial class Form1 : Form, IObserver
+    public partial class SecondLevelForm : Form, IObserver
     {
         public Controller Controller { get; private set; }
         public Model.Point Point { get; private set; }
         public Map Game { get; private set; }
 
-        public Form1()
+        public SecondLevelForm()
         {
             InitializeComponent();
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
-            Game = new Game().CreateFirstLevelMap();
+            Game = new Game().CreateSecondLevelMap();
             Game.Player.RegisterObserver(this);
             Game.RegisterObserver(this);
             Point = Game.Player.Position; // Инициализация целевой позиции
@@ -41,31 +41,31 @@ namespace SanyaVsZondB
         {
             if (Game.ZondBs.Count > 0)
                 foreach (var zondB in Game.ZondBs)
-                { 
-                    DrawZombie(e.Graphics, 
-                        (int)(zondB.Position.X - zondB.HitboxRadius), 
-                        (int)(zondB.Position.Y - zondB.HitboxRadius), 
-                        (int)zondB.HitboxRadius * 2, 
+                {
+                    DrawZombie(e.Graphics,
+                        (int)(zondB.Position.X - zondB.HitboxRadius),
+                        (int)(zondB.Position.Y - zondB.HitboxRadius),
+                        (int)zondB.HitboxRadius * 2,
                         (int)zondB.HitboxRadius * 2);
                 }
 
             if (Game.Bullets.Count > 0)
                 foreach (var bullet in Game.Bullets)
                 {
-                    DrawBullet(e.Graphics, 
-                        (int)(bullet.Position.X - bullet.HitboxRadius), 
-                        (int)(bullet.Position.Y - bullet.HitboxRadius), 
-                        (int)bullet.HitboxRadius * 2, 
+                    DrawBullet(e.Graphics,
+                        (int)(bullet.Position.X - bullet.HitboxRadius),
+                        (int)(bullet.Position.Y - bullet.HitboxRadius),
+                        (int)bullet.HitboxRadius * 2,
                         (int)bullet.HitboxRadius * 2);
                 }
 
             if (Game.Flowers.Count > 0)
-                foreach(var flower in Game.Flowers)
+                foreach (var flower in Game.Flowers)
                 {
-                    DrawFlower(e.Graphics, 
-                        (int)(flower.Position.X - flower.HitboxRadius), 
-                        (int)(flower.Position.Y - flower.HitboxRadius), 
-                        (int)flower.HitboxRadius * 2, 
+                    DrawFlower(e.Graphics,
+                        (int)(flower.Position.X - flower.HitboxRadius),
+                        (int)(flower.Position.Y - flower.HitboxRadius),
+                        (int)flower.HitboxRadius * 2,
                         (int)flower.HitboxRadius * 2);
                 }
 
@@ -79,21 +79,21 @@ namespace SanyaVsZondB
 
         private void DrawFlower(Graphics g, int x, int y, int width, int height)
         {
-            SolidBrush brush = new SolidBrush(Color.Yellow); 
+            SolidBrush brush = new SolidBrush(Color.Yellow);
             g.FillEllipse(brush, x, y, width, height);
             brush.Dispose();
         }
 
         private void DrawBullet(Graphics g, int x, int y, int width, int height)
         {
-            SolidBrush brush = new SolidBrush(Color.Blue); 
+            SolidBrush brush = new SolidBrush(Color.Blue);
             g.FillEllipse(brush, x, y, width, height);
             brush.Dispose();
         }
 
         private void DrawZombie(Graphics g, int x, int y, int width, int height)
         {
-            SolidBrush brush = new SolidBrush(Color.Green); 
+            SolidBrush brush = new SolidBrush(Color.Green);
             g.FillEllipse(brush, x, y, width, height);
             brush.Dispose();
         }
@@ -101,7 +101,7 @@ namespace SanyaVsZondB
         public void Update(IObservable observable)
         {
             Game.Player.Target = new Model.Point(Cursor.Position.X, Cursor.Position.Y);
-            this.Invalidate();   
+            this.Invalidate();
         }
 
         private void SwitchForm(Form newForm)
@@ -111,18 +111,15 @@ namespace SanyaVsZondB
         }
 
         private void Player_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "IsAlive")
-            {
-                SwitchForm(new MainMenuForm());
-            }
+        { 
+            SwitchForm(new MainMenuForm());
         }
 
         private void ClearLevel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsLevelClear")
             {
-                SwitchForm(new SecondLevelForm());
+                SwitchForm(new MainMenuForm());
             }
         }
 
