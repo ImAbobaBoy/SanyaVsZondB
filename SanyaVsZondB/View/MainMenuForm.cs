@@ -12,7 +12,7 @@ namespace SanyaVsZondB
 {
     public partial class MainMenuForm : Form
     {
-        private System.Windows.Forms.Button buttonPlay;
+        private Button buttonPlay;
         private TabControl tabControl1;
         private TabPage tabPage1;
         private TabPage tabPage2;
@@ -47,7 +47,7 @@ namespace SanyaVsZondB
 
         private void ButtonPlay_Click(object sender, EventArgs e)
         {
-            var level = new Form1();
+            var level = new FirstLevelForm();
             SwitchForm(level);
         }
 
@@ -55,22 +55,22 @@ namespace SanyaVsZondB
         {
             if (tabControl1.SelectedIndex == 0)
             {
-                var firstTabForm = new Form1();
+                var firstTabForm = new FirstLevelForm();
                 firstTabForm.TopLevel = false;
                 firstTabForm.FormBorderStyle = FormBorderStyle.None;
                 firstTabForm.Dock = DockStyle.Fill;
                 tabPage1.Controls.Add(firstTabForm);
                 firstTabForm.Show();
             }
-            if (tabControl1.SelectedIndex == 0)
-            {
-                var secondTabForm = new SecondLevelForm();
-                secondTabForm.TopLevel = false;
-                secondTabForm.FormBorderStyle = FormBorderStyle.None;
-                secondTabForm.Dock = DockStyle.Fill;
-                tabPage1.Controls.Add(secondTabForm);
-                secondTabForm.Show();
-            }
+            //if (tabControl1.SelectedIndex == 0)
+            //{
+            //    var secondTabForm = new SecondLevelForm();
+            //    secondTabForm.TopLevel = false;
+            //    secondTabForm.FormBorderStyle = FormBorderStyle.None;
+            //    secondTabForm.Dock = DockStyle.Fill;
+            //    tabPage1.Controls.Add(secondTabForm);
+            //    secondTabForm.Show();
+            //}
         }
 
         private void SwitchForm(Form newForm)

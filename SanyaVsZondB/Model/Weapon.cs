@@ -22,5 +22,10 @@ namespace SanyaVsZondB.Model
             BulletSpeed = bulletSpeed;
             ShootingFrequency = shootingFrequency;
         }
+
+        public void IncreaseCountBulletsInQueue(int count)
+        {
+            CountBulletsInQueue += count;
+        }
     }
 }

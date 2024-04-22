@@ -1,6 +1,6 @@
 ﻿namespace SanyaVsZondB
 {
-    partial class Form1
+    partial class FirstLevelForm
     {
         /// <summary>
         /// Обязательная переменная конструктора.

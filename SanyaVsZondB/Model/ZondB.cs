@@ -41,7 +41,7 @@ namespace SanyaVsZondB.Model
         }
 
         public void Hit()
-        {
+        { 
             if (IsNear())
                 if (Flowers.Count > 0)
                     Flowers[0].TakeDamage(Damage);
@@ -50,7 +50,7 @@ namespace SanyaVsZondB.Model
         }
 
         public override void Move(Enum direction)
-        {
+        { 
             if (Flowers.Count > 0)
                 Target = Flowers[0].Position;
             else

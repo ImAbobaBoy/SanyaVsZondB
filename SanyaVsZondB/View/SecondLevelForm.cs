@@ -12,21 +12,23 @@ namespace SanyaVsZondB
     {
         public Controller Controller { get; private set; }
         public Model.Point Point { get; private set; }
-        public Map Game { get; private set; }
+        public Map Map { get; private set; }
+        public Game Game { get; private set; }
 
-        public SecondLevelForm()
+        public SecondLevelForm(Game game)
         {
             InitializeComponent();
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
-            Game = new Game().CreateSecondLevelMap();
-            Game.Player.RegisterObserver(this);
-            Game.RegisterObserver(this);
-            Point = Game.Player.Position; // Инициализация целевой позиции
-            Controller = new Controller(this, Point, Game);
+            Game = game;
+            Map = Game.CreateSecondLevelMap();
+            Map.Player.RegisterObserver(this);
+            Map.RegisterObserver(this);
+            Point = Map.Player.Position; // Инициализация целевой позиции
+            Controller = new Controller(this, Point, Map);
             Controller.InitializeKeyHandling();
 
-            Game.Player.PropertyChanged += Player_PropertyChanged;
-            Game.PropertyChanged += ClearLevel_PropertyChanged;
+            Map.Player.PropertyChanged += Player_PropertyChanged;
+            Map.PropertyChanged += ClearLevel_PropertyChanged;
             this.FormClosing += new FormClosingEventHandler(Form1_FormClosing);
         }
 
@@ -39,8 +41,8 @@ namespace SanyaVsZondB
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (Game.ZondBs.Count > 0)
-                foreach (var zondB in Game.ZondBs)
+            if (Map.ZondBs.Count > 0)
+                foreach (var zondB in Map.ZondBs)
                 {
                     DrawZombie(e.Graphics,
                         (int)(zondB.Position.X - zondB.HitboxRadius),
@@ -49,8 +51,8 @@ namespace SanyaVsZondB
                         (int)zondB.HitboxRadius * 2);
                 }
 
-            if (Game.Bullets.Count > 0)
-                foreach (var bullet in Game.Bullets)
+            if (Map.Bullets.Count > 0)
+                foreach (var bullet in Map.Bullets)
                 {
                     DrawBullet(e.Graphics,
                         (int)(bullet.Position.X - bullet.HitboxRadius),
@@ -59,8 +61,8 @@ namespace SanyaVsZondB
                         (int)bullet.HitboxRadius * 2);
                 }
 
-            if (Game.Flowers.Count > 0)
-                foreach (var flower in Game.Flowers)
+            if (Map.Flowers.Count > 0)
+                foreach (var flower in Map.Flowers)
                 {
                     DrawFlower(e.Graphics,
                         (int)(flower.Position.X - flower.HitboxRadius),
@@ -69,12 +71,17 @@ namespace SanyaVsZondB
                         (int)flower.HitboxRadius * 2);
                 }
 
+            string hpText = $"HP: {Map.Player.Hp}";
+            Font font = new Font("Arial", 12);
+            Brush brush = Brushes.Black;
+            e.Graphics.DrawString(hpText, font, brush, new PointF(this.ClientSize.Width - 100, 10));
+
             base.OnPaint(e);
 
-            int x = (int)(Point.X - Game.Player.HitboxRadius);
-            int y = (int)(Point.Y - Game.Player.HitboxRadius);
+            int x = (int)(Point.X - Map.Player.HitboxRadius);
+            int y = (int)(Point.Y - Map.Player.HitboxRadius);
 
-            DrawCircle(e.Graphics, x, y, (int)Game.Player.HitboxRadius * 2, (int)Game.Player.HitboxRadius * 2);
+            DrawCircle(e.Graphics, x, y, (int)Map.Player.HitboxRadius * 2, (int)Map.Player.HitboxRadius * 2);
         }
 
         private void DrawFlower(Graphics g, int x, int y, int width, int height)
@@ -100,7 +107,7 @@ namespace SanyaVsZondB
 
         public void Update(IObservable observable)
         {
-            Game.Player.Target = new Model.Point(Cursor.Position.X, Cursor.Position.Y);
+            Map.Player.Target = new Model.Point(Cursor.Position.X, Cursor.Position.Y);
             this.Invalidate();
         }
 

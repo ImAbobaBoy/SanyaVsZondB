@@ -45,13 +45,7 @@ namespace SanyaVsZondB.Model
             Bullets = new List<Bullet>();
             Flowers = new List<Flower>();
             random = new Random();
-            Player = new Player(
-                Level.PlayerHp, 
-                new Point(width / 2, width), 
-                Level.PlayerSpeed, 50, 
-                new Point(width / 2, height / 2), 
-                Level.StartWeapon, Bullets, ZondBs);
-            
+            Player = level.Player;
         }
 
         public void MoveZondBS()
