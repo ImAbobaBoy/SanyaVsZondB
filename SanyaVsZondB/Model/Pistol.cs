@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SanyaVsZondB.Model
 {
-    internal class Pistol : Weapon
+    public class Pistol : Weapon
     {
         public static string Name { get; private set; }
         public Pistol(int damage, int countBulletsInQueue, int bulletSpeed, int shootingFrequency) 

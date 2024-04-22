@@ -17,8 +17,8 @@ namespace SanyaVsZondB.Model
         public override double Speed { get; set; }
         public override double HitboxRadius { get; set; }
         public override Point Position { get; set; }
-        private double dx;
-        private double dy;
+        private double _dx;
+        private double _dy;
 
         public Bullet(
             int hp,
@@ -32,8 +32,8 @@ namespace SanyaVsZondB.Model
         {
             Damage = damage;
             ZondBs = zondBs;
-            dx = (Target.X - Position.X) / CalculateDistance(Target);
-            dy = (Target.Y - Position.Y) / CalculateDistance(Target);
+            _dx = (Target.X - Position.X) / CalculateDistance(Target);
+            _dy = (Target.Y - Position.Y) / CalculateDistance(Target);
             Bullets = bullets;
         }
 
@@ -51,8 +51,8 @@ namespace SanyaVsZondB.Model
 
         public override void Move(Enum direction)
         {
-            Position.X += dx * Speed;
-            Position.Y += dy * Speed;
+            Position.X += _dx * Speed;
+            Position.Y += _dy * Speed;
         }
 
         public override string GetImageFileName()

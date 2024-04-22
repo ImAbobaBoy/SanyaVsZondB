@@ -18,7 +18,7 @@ namespace SanyaVsZondB.Model
         public List<ZondB> ZondBs { get; private set; }
         public List<Bullet> Bullets { get; private set; }
         public bool IsAlive {  
-            get { return IsAlive;  }
+            get { return isAlive;  }
             private set
             {
                 if (isAlive != value)
