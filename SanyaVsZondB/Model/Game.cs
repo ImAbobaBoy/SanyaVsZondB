@@ -11,6 +11,10 @@ namespace SanyaVsZondB.Model
         //
         //some game params
         //
+
+        private static double _multiplierZondBCount;
+        private static double _multiplierZondBHp;
+
         public Player Player { get; private set; }
         public List<(Action action, string name)> Improvements { get; private set; }
 
@@ -21,14 +25,20 @@ namespace SanyaVsZondB.Model
             {
                 (action: new Action(() => { Player.Hp += 100; }), name: "Увеличить хп"),
                 (action: new Action(() => { Player.Speed += 100; }), name: "Увеличить скорость"),
-                (action: new Action(() => { Player.Weapon.IncreaseCountBulletsInQueue(1); }), name: "Увеличить кол-во пуль в очереди на 1")
+                (action: new Action(() => { Player.Weapon.IncreaseCountBulletsInQueue(1); }), name: "Увеличить кол-во пуль в очереди на 1"),
+                (action: new Action(() => { _multiplierZondBCount = 1.5; }), name: "Увеличичть кол-во ЗондБэ в 1.5 раза"),
+                (action: new Action(() => { _multiplierZondBHp = 1.5; }), name: "Увеличичть хп ЗондБэ в 1.5 раза"),
             };
+
+            _multiplierZondBCount = 1;
+            _multiplierZondBHp = 1;
         }
 
         public Map CreateFirstLevelMap() => new Map(1080, 1920, CreateLevel(1, 1, 1, 100, Player));
-        public Map CreateSecondLevelMap() => new Map(1080, 1920, CreateLevel(2, 1, 1, 100, Player));
+
+        public Map CreateSecondLevelMap() => new Map(1080, 1920, CreateLevel(10, 1, 1, 100, Player));
 
         private static Level CreateLevel(int zondBCount, double spawnFrequency, double zondBSpeed, int zondBHp, Player player) => 
-            new Level(zondBCount, spawnFrequency, zondBSpeed, zondBHp, player);
+            new Level((int)(zondBCount * _multiplierZondBCount), spawnFrequency, zondBSpeed, (int)(zondBHp * _multiplierZondBHp), player);
     }
 }

@@ -119,7 +119,7 @@ namespace SanyaVsZondBTests
         [Test]
         public void Bullet_HitZondB_DamagesZondBAndRemovesBullet()
         {
-            var zondB = new ZondB(100, 5, 25, new Point(10, 10), 5, _player, _zondBs, _flowers, new Map(0, 0, new Level(0, 0, 0, 0, 0, 0)));
+            var zondB = new ZondB(100, 5, 25, new Point(10, 10), 5, _player, _zondBs, _flowers, new Map(0, 0, new Level(0, 0, 0, 0, _player)));
             _zondBs.Add(zondB);
             _bullet.HitZondB();
             Assert.IsFalse(_bullets.Contains(_bullet));

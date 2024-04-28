@@ -22,7 +22,7 @@ namespace SanyaVsZondBTests
             _zondBS = new List<ZondB>();
             _flowers = new List<Flower>();
             _flowers.Add(new Flower(10, new Point(100, 0), 5.0, 10.0, new Point(100, 0), false, _flowers));
-            _map = new Map(1, 1, new Level(1, 1, 1, 1, 1, 1));
+            _map = new Map(1, 1, new Level(1, 1, 1, 1, _player));
 
             _zondB = new ZondB(
                 100,

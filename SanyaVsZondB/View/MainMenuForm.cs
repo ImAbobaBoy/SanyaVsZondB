@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SanyaVsZondB.Model;
+using SanyaVsZondB.View;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +19,7 @@ namespace SanyaVsZondB
         private TabPage tabPage1;
         private TabPage tabPage2;
         private TabPage tabPage3;
+        public Game Game { get; private set; }
 
         public MainMenuForm()
         {
@@ -27,6 +30,8 @@ namespace SanyaVsZondB
             tabControl1.TabPages.Add(tabPage1 = new TabPage("Экран 1"));
             tabControl1.TabPages.Add(tabPage2 = new TabPage("Экран 2"));
             tabControl1.TabPages.Add(tabPage3 = new TabPage("Экран 3"));
+
+            Game = new Game();
 
             // Добавление кнопки на форму
             this.Controls.Add(buttonPlay);
@@ -47,29 +52,38 @@ namespace SanyaVsZondB
 
         private void ButtonPlay_Click(object sender, EventArgs e)
         {
-            var level = new FirstLevelForm();
+            var level = new FirstLevelForm(Game);
             SwitchForm(level);
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedIndex == 0)
-            {
-                var firstTabForm = new FirstLevelForm();
-                firstTabForm.TopLevel = false;
-                firstTabForm.FormBorderStyle = FormBorderStyle.None;
-                firstTabForm.Dock = DockStyle.Fill;
-                tabPage1.Controls.Add(firstTabForm);
-                firstTabForm.Show();
-            }
             //if (tabControl1.SelectedIndex == 0)
             //{
-            //    var secondTabForm = new SecondLevelForm();
+            //    var firstTabForm = new FirstLevelForm(Game);
+            //    firstTabForm.TopLevel = false;
+            //    firstTabForm.FormBorderStyle = FormBorderStyle.None;
+            //    firstTabForm.Dock = DockStyle.Fill;
+            //    tabPage1.Controls.Add(firstTabForm);
+            //    firstTabForm.Show();
+            //}
+            //if (tabControl1.SelectedIndex == 0)
+            //{
+            //    var secondTabForm = new SecondLevelForm(Game);
             //    secondTabForm.TopLevel = false;
             //    secondTabForm.FormBorderStyle = FormBorderStyle.None;
             //    secondTabForm.Dock = DockStyle.Fill;
             //    tabPage1.Controls.Add(secondTabForm);
             //    secondTabForm.Show();
+            //}
+            //if (tabControl1.SelectedIndex == 0)
+            //{
+            //    var thirdTabForm = new FirstToSecond(Game, );
+            //    firstTabForm.TopLevel = false;
+            //    firstTabForm.FormBorderStyle = FormBorderStyle.None;
+            //    firstTabForm.Dock = DockStyle.Fill;
+            //    tabPage1.Controls.Add(firstTabForm);
+            //    firstTabForm.Show();
             //}
         }
 

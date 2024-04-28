@@ -16,11 +16,13 @@ namespace SanyaVsZondB.View
         public Game Game {  get; private set; }
         private Button buttonMakeChanges1;
         private int _randomImprovementIndex;
-        public FirstToSecond(Game game)
+        private string _whichOneToSwitch;
+        public FirstToSecond(Game game, string whichOneToSwitch)
         {
             var rnd = new Random();
             Game = game;
             _randomImprovementIndex = rnd.Next(0, game.Improvements.Count);
+            _whichOneToSwitch = whichOneToSwitch;
 
             InitializeComponent();
 
@@ -31,17 +33,26 @@ namespace SanyaVsZondB.View
         }
 
         private void ButtonMakeChanges1_Click(object sender, EventArgs e)
-        {
-            var level = new SecondLevelForm(Game);
+        { 
             var improvement = Game.Improvements[_randomImprovementIndex];
             improvement.action();
-            SwitchForm(level);
+            SwitchForm(_whichOneToSwitch);
         }
 
-        private void SwitchForm(Form newForm)
+        private void SwitchForm(string newForm)
         {
             this.Hide();
-            newForm.Show();
+            Form nextForm;
+            switch (newForm)
+            {
+                case "Second":
+                    nextForm = new SecondLevelForm(Game);
+                    break;
+                default:
+                    nextForm = null;
+                    break;
+            }
+            nextForm.Show();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace SanyaVsZondB
 {
-    public partial class FirstLevelForm : Form, IObserver
+    public partial class LevelForm : Form, IObserver
     {
         public Controller Controller { get; private set; }
         public Model.Point Point { get; private set; }
@@ -16,7 +16,7 @@ namespace SanyaVsZondB
         public Game Game { get; private set; }
         private string _nextLevel;
 
-        public FirstLevelForm(Game game)
+        public LevelForm(Game game, string nextLevel)
         {
             InitializeComponent();
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
@@ -24,10 +24,10 @@ namespace SanyaVsZondB
             Map = Game.CreateFirstLevelMap();
             Map.Player.RegisterObserver(this);
             Map.RegisterObserver(this);
-            Point = Map.Player.Position; 
+            Point = Map.Player.Position;
             Controller = new Controller(this, Point, Map);
             Controller.InitializeKeyHandling();
-            _nextLevel = "Second";
+            _nextLevel = nextLevel;
 
             Map.Player.PropertyChanged += Player_PropertyChanged;
             Map.PropertyChanged += ClearLevel_PropertyChanged;
@@ -45,11 +45,11 @@ namespace SanyaVsZondB
         {
             if (Map.ZondBs.Count > 0)
                 foreach (var zondB in Map.ZondBs)
-                { 
-                    DrawZombie(e.Graphics, 
-                        (int)(zondB.Position.X - zondB.HitboxRadius), 
-                        (int)(zondB.Position.Y - zondB.HitboxRadius), 
-                        (int)zondB.HitboxRadius * 2, 
+                {
+                    DrawZombie(e.Graphics,
+                        (int)(zondB.Position.X - zondB.HitboxRadius),
+                        (int)(zondB.Position.Y - zondB.HitboxRadius),
+                        (int)zondB.HitboxRadius * 2,
                         (int)zondB.HitboxRadius * 2);
                     DrawZombieHp(e.Graphics, zondB.Position, zondB.Hp);
                 }
@@ -57,20 +57,20 @@ namespace SanyaVsZondB
             if (Map.Bullets.Count > 0)
                 foreach (var bullet in Map.Bullets)
                 {
-                    DrawBullet(e.Graphics, 
-                        (int)(bullet.Position.X - bullet.HitboxRadius), 
-                        (int)(bullet.Position.Y - bullet.HitboxRadius), 
-                        (int)bullet.HitboxRadius * 2, 
+                    DrawBullet(e.Graphics,
+                        (int)(bullet.Position.X - bullet.HitboxRadius),
+                        (int)(bullet.Position.Y - bullet.HitboxRadius),
+                        (int)bullet.HitboxRadius * 2,
                         (int)bullet.HitboxRadius * 2);
                 }
 
             if (Map.Flowers.Count > 0)
-                foreach(var flower in Map.Flowers)
+                foreach (var flower in Map.Flowers)
                 {
-                    DrawFlower(e.Graphics, 
-                        (int)(flower.Position.X - flower.HitboxRadius), 
-                        (int)(flower.Position.Y - flower.HitboxRadius), 
-                        (int)flower.HitboxRadius * 2, 
+                    DrawFlower(e.Graphics,
+                        (int)(flower.Position.X - flower.HitboxRadius),
+                        (int)(flower.Position.Y - flower.HitboxRadius),
+                        (int)flower.HitboxRadius * 2,
                         (int)flower.HitboxRadius * 2);
                 }
 
@@ -89,21 +89,21 @@ namespace SanyaVsZondB
 
         private void DrawFlower(Graphics g, int x, int y, int width, int height)
         {
-            SolidBrush brush = new SolidBrush(Color.Yellow); 
+            SolidBrush brush = new SolidBrush(Color.Yellow);
             g.FillEllipse(brush, x, y, width, height);
             brush.Dispose();
         }
 
         private void DrawBullet(Graphics g, int x, int y, int width, int height)
         {
-            SolidBrush brush = new SolidBrush(Color.Blue); 
+            SolidBrush brush = new SolidBrush(Color.Blue);
             g.FillEllipse(brush, x, y, width, height);
             brush.Dispose();
         }
 
         private void DrawZombie(Graphics g, int x, int y, int width, int height)
         {
-            SolidBrush brush = new SolidBrush(Color.Green); 
+            SolidBrush brush = new SolidBrush(Color.Green);
             g.FillEllipse(brush, x, y, width, height);
             brush.Dispose();
         }
@@ -129,20 +129,33 @@ namespace SanyaVsZondB
         public void Update(IObservable observable)
         {
             Map.Player.Target = new Model.Point(Cursor.Position.X, Cursor.Position.Y);
-            this.Invalidate();   
+            this.Invalidate();
         }
 
-        private void SwitchForm(Form newForm)
+        private void SwitchForm(string newForm)
         {
             this.Hide();
-            newForm.Show();
+            Form nextForm;
+            switch (newForm)
+            {
+                case "MainMenuForm":
+                    nextForm = new MainMenuForm();
+                    break;
+                case "UpgradesForm":
+                    nextForm = new FirstToSecond(Game, _nextLevel);
+                    break;
+                default:
+                    nextForm = null;
+                    break;
+            }
+            nextForm.Show();
         }
 
         private void Player_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsAlive")
             {
-                SwitchForm(new MainMenuForm());
+                SwitchForm("MainMenuForm");
             }
         }
 
@@ -151,7 +164,7 @@ namespace SanyaVsZondB
             if (e.PropertyName == "IsLevelClear")
             {
                 Map.Player.PropertyChanged -= Player_PropertyChanged;
-                SwitchForm(new FirstToSecond(Game, _nextLevel));
+                SwitchForm("UpgradesForm");
             }
         }
 

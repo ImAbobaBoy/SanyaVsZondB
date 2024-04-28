@@ -23,7 +23,7 @@ namespace SanyaVsZondB
             Map = Game.CreateSecondLevelMap();
             Map.Player.RegisterObserver(this);
             Map.RegisterObserver(this);
-            Point = Map.Player.Position; // Инициализация целевой позиции
+            Point = Map.Player.Position; 
             Controller = new Controller(this, Point, Map);
             Controller.InitializeKeyHandling();
 
@@ -41,7 +41,8 @@ namespace SanyaVsZondB
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (Map.ZondBs.Count > 0)
+            if (Map.ZondBs.Count > 0) { 
+            }
                 foreach (var zondB in Map.ZondBs)
                 {
                     DrawZombie(e.Graphics,
@@ -49,6 +50,7 @@ namespace SanyaVsZondB
                         (int)(zondB.Position.Y - zondB.HitboxRadius),
                         (int)zondB.HitboxRadius * 2,
                         (int)zondB.HitboxRadius * 2);
+                    DrawZombieHp(e.Graphics, zondB.Position, zondB.Hp);
                 }
 
             if (Map.Bullets.Count > 0)
@@ -105,6 +107,24 @@ namespace SanyaVsZondB
             brush.Dispose();
         }
 
+        private void DrawZombieHp(Graphics g, Model.Point zombiePosition, int hp)
+        {
+            Font font = new Font("Arial", 10);
+
+            string hpText = $"HP: {hp}";
+
+            // Предположим, что текст должен быть отрисован непосредственно над головой зомби
+            // Вы можете настроить эти значения в соответствии с вашими требованиями
+            int textX = (int)zombiePosition.X - 30; // Сдвиг влево для центрирования
+            int textY = (int)zombiePosition.Y - 70; // Сдвиг вверх для размещения над головой зомби
+
+            // Используйте TextRenderer для отрисовки текста
+            TextRenderer.DrawText(g, hpText, font, new System.Drawing.Point(textX, textY), Color.Black);
+
+            // Освободите ресурсы
+            font.Dispose();
+        }
+
         public void Update(IObservable observable)
         {
             Map.Player.Target = new Model.Point(Cursor.Position.X, Cursor.Position.Y);
@@ -118,7 +138,7 @@ namespace SanyaVsZondB
         }
 
         private void Player_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        { 
+        {
             SwitchForm(new MainMenuForm());
         }
 

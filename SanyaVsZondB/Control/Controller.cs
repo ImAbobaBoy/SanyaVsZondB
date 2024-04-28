@@ -19,7 +19,7 @@ namespace SanyaVsZondB.Control
             Game = game;
 
             ZondBMoveTimer = new Timer();
-            ZondBMoveTimer.Interval = 1;
+            ZondBMoveTimer.Interval = 16;
             ZondBMoveTimer.Tick += UpdateZombiePositions;
             ZondBMoveTimer.Start();
         }
