@@ -151,7 +151,7 @@ namespace SanyaVsZondB
             if (e.PropertyName == "IsLevelClear")
             {
                 Map.Player.PropertyChanged -= Player_PropertyChanged;
-                SwitchForm(new FirstToSecond(Game, _nextLevel));
+                //SwitchForm(new FirstToSecond(Map, _nextLevel));
             }
         }
 

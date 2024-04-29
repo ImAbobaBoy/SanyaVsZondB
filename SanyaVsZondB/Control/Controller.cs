@@ -8,18 +8,24 @@ namespace SanyaVsZondB.Control
     {
         public Form View { get; private set; }
         public Point Point { get; private set; }
-        public Map Game {  get; private set; }
+        public Map Map {  get; private set; }
         public Timer ZondBMoveTimer { get; private set; }
+        public Timer ZondBHitTimer { get; private set; }
         private int count = 0;
 
         public Controller(Form view, Point point, Map game)
         {
             View = view;
             Point = point;
-            Game = game;
+            Map = game;
+
+            ZondBHitTimer = new Timer();
+            ZondBHitTimer.Interval = 2000;
+            ZondBHitTimer.Tick += HitZondB;
+            ZondBHitTimer.Start();
 
             ZondBMoveTimer = new Timer();
-            ZondBMoveTimer.Interval = 16;
+            ZondBMoveTimer.Interval = 6;
             ZondBMoveTimer.Tick += UpdateZombiePositions;
             ZondBMoveTimer.Start();
         }
@@ -27,7 +33,7 @@ namespace SanyaVsZondB.Control
         public void Shoot(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
-                Game.Shoot();
+                Map.Shoot();
         }
 
         public void InitializeKeyHandling()
@@ -43,12 +49,17 @@ namespace SanyaVsZondB.Control
 
         public void UpdateZombiePositions(object sender, EventArgs e)
         {
-            Game.MoveZondBS();
-            if (Game.Bullets.Count > 0)
-                Game.MoveBullets();
-            if (count < Game.Level.ZondBCount)    
-                Game.SpawnZondB();
+            Map.MoveZondBS();
+            if (Map.Bullets.Count > 0)
+                Map.MoveBullets();
+            if (count < Map.Level.ZondBCount)    
+                Map.SpawnZondB();
             count++;
+        }
+
+        public void HitZondB(object sender, EventArgs e)
+        {
+            Map.HitZondB();
         }
 
         private void View_KeyDown(object sender, KeyEventArgs e)
@@ -56,19 +67,19 @@ namespace SanyaVsZondB.Control
             switch (e.KeyCode.ToString())
             {
                 case "A":
-                    Game.Player.Move(MoveDirection.Left);
+                    Map.Player.Move(MoveDirection.Left);
                     break;
                 case "D":
-                    Game.Player.Move(MoveDirection.Right);
+                    Map.Player.Move(MoveDirection.Right);
                     break;
                 case "W":
-                    Game.Player.Move(MoveDirection.Up);
+                    Map.Player.Move(MoveDirection.Up);
                     break;
                 case "S":
-                    Game.Player.Move(MoveDirection.Down);
+                    Map.Player.Move(MoveDirection.Down);
                     break;
                 case "E":
-                    Game.SpawnFlower();
+                    Map.SpawnFlower();
                     break;
             }
         }

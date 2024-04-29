@@ -52,7 +52,7 @@ namespace SanyaVsZondB
 
         private void ButtonPlay_Click(object sender, EventArgs e)
         {
-            var level = new FirstLevelForm(Game);
+            var level = new LevelForm(Game, 1);
             SwitchForm(level);
         }
 
@@ -60,7 +60,7 @@ namespace SanyaVsZondB
         {
             //if (tabControl1.SelectedIndex == 0)
             //{
-            //    var firstTabForm = new FirstLevelForm(Game);
+            //    var firstTabForm = new FirstLevelForm(Map);
             //    firstTabForm.TopLevel = false;
             //    firstTabForm.FormBorderStyle = FormBorderStyle.None;
             //    firstTabForm.Dock = DockStyle.Fill;
@@ -69,7 +69,7 @@ namespace SanyaVsZondB
             //}
             //if (tabControl1.SelectedIndex == 0)
             //{
-            //    var secondTabForm = new SecondLevelForm(Game);
+            //    var secondTabForm = new SecondLevelForm(Map);
             //    secondTabForm.TopLevel = false;
             //    secondTabForm.FormBorderStyle = FormBorderStyle.None;
             //    secondTabForm.Dock = DockStyle.Fill;
@@ -78,7 +78,7 @@ namespace SanyaVsZondB
             //}
             //if (tabControl1.SelectedIndex == 0)
             //{
-            //    var thirdTabForm = new FirstToSecond(Game, );
+            //    var thirdTabForm = new FirstToSecond(Map, );
             //    firstTabForm.TopLevel = false;
             //    firstTabForm.FormBorderStyle = FormBorderStyle.None;
             //    firstTabForm.Dock = DockStyle.Fill;

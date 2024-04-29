@@ -20,7 +20,7 @@ namespace SanyaVsZondB.Model
 
         public Game()
         {
-            Player = new Player(100, new Point(0, 0), 50, 50, new Point(300, 300), new Pistol(100, 3, 20, 3), new List<Bullet>(), new List<ZondB>());
+            Player = new Player(100, new Point(0, 0), 50, 50, new Point(300, 300), new Pistol(10, 1, 50, 3), new List<Bullet>(), new List<ZondB>());
             Improvements = new List<(Action action, string name)>
             {
                 (action: new Action(() => { Player.Hp += 100; }), name: "Увеличить хп"),
@@ -34,9 +34,15 @@ namespace SanyaVsZondB.Model
             _multiplierZondBHp = 1;
         }
 
-        public Map CreateFirstLevelMap() => new Map(1080, 1920, CreateLevel(1, 1, 1, 100, Player));
+        public Map CreateFirstLevelMap() => new Map(1080, 1920, CreateLevel(15, 1, 1, 100, Player));
 
-        public Map CreateSecondLevelMap() => new Map(1080, 1920, CreateLevel(10, 1, 1, 100, Player));
+        public Map CreateSecondLevelMap() => new Map(1080, 1920, CreateLevel(10, 1, 1.5, 100, Player));
+
+        public Map CreateThirdLevelMap() => new Map(1080, 1920, CreateLevel(25, 1, 0.5, 100, Player));
+
+        public Map CreateFourthLevelMap() => new Map(1080, 1920, CreateLevel(50, 1, 1, 100, Player));
+
+        public Map CreateFifthLevelMap() => new Map(1080, 1920, CreateLevel(75, 1, 1, 100, Player));
 
         private static Level CreateLevel(int zondBCount, double spawnFrequency, double zondBSpeed, int zondBHp, Player player) => 
             new Level((int)(zondBCount * _multiplierZondBCount), spawnFrequency, zondBSpeed, (int)(zondBHp * _multiplierZondBHp), player);

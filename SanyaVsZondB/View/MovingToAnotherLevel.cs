@@ -11,13 +11,13 @@ using System.Windows.Forms;
 
 namespace SanyaVsZondB.View
 {
-    public partial class FirstToSecond : Form
+    public partial class MovingToAnotherLevel : Form
     {
         public Game Game {  get; private set; }
         private Button buttonMakeChanges1;
         private int _randomImprovementIndex;
-        private string _whichOneToSwitch;
-        public FirstToSecond(Game game, string whichOneToSwitch)
+        private int _whichOneToSwitch;
+        public MovingToAnotherLevel(Game game, int whichOneToSwitch)
         {
             var rnd = new Random();
             Game = game;
@@ -39,14 +39,23 @@ namespace SanyaVsZondB.View
             SwitchForm(_whichOneToSwitch);
         }
 
-        private void SwitchForm(string newForm)
+        private void SwitchForm(int nextLevel)
         {
             this.Hide();
             Form nextForm;
-            switch (newForm)
+            switch (nextLevel)
             {
-                case "Second":
-                    nextForm = new SecondLevelForm(Game);
+                case 2:
+                    nextForm = new LevelForm(Game, 2);
+                    break;
+                case 3:
+                    nextForm = new LevelForm(Game, 3);
+                    break;
+                case 4:
+                    nextForm = new LevelForm(Game, 4);
+                    break;
+                case 5:
+                    nextForm = new LevelForm(Game, 5);
                     break;
                 default:
                     nextForm = null;

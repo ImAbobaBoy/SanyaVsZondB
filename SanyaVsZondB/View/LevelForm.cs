@@ -14,24 +14,44 @@ namespace SanyaVsZondB
         public Model.Point Point { get; private set; }
         public Map Map { get; private set; }
         public Game Game { get; private set; }
-        private string _nextLevel;
+        private int _currentLevel;
+        private const int _countLevels = 5;
 
-        public LevelForm(Game game, string nextLevel)
+        public LevelForm(Game game, int currentLevel)
         {
             InitializeComponent();
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
             Game = game;
-            Map = Game.CreateFirstLevelMap();
+            Map = CreateLevel(game, currentLevel);
             Map.Player.RegisterObserver(this);
             Map.RegisterObserver(this);
             Point = Map.Player.Position;
             Controller = new Controller(this, Point, Map);
             Controller.InitializeKeyHandling();
-            _nextLevel = nextLevel;
+            _currentLevel = currentLevel;
 
             Map.Player.PropertyChanged += Player_PropertyChanged;
             Map.PropertyChanged += ClearLevel_PropertyChanged;
             this.FormClosing += new FormClosingEventHandler(Form1_FormClosing);
+        }
+
+        private static Map CreateLevel(Game game, int currentLevel)
+        {
+            switch (currentLevel)
+            {
+                case 1:
+                    return game.CreateFirstLevelMap();
+                case 2:
+                    return game.CreateSecondLevelMap();
+                case 3:
+                    return game.CreateThirdLevelMap();
+                case 4:
+                    return game.CreateFourthLevelMap();
+                case 5:
+                    return game.CreateFifthLevelMap();
+                default:
+                    return null;
+            }
         }
 
         private void DrawCircle(Graphics g, int x, int y, int width, int height)
@@ -114,15 +134,11 @@ namespace SanyaVsZondB
 
             string hpText = $"HP: {hp}";
 
-            // Предположим, что текст должен быть отрисован непосредственно над головой зомби
-            // Вы можете настроить эти значения в соответствии с вашими требованиями
-            int textX = (int)zombiePosition.X - 30; // Сдвиг влево для центрирования
-            int textY = (int)zombiePosition.Y - 70; // Сдвиг вверх для размещения над головой зомби
+            int textX = (int)zombiePosition.X - 30; 
+            int textY = (int)zombiePosition.Y - 70; 
 
-            // Используйте TextRenderer для отрисовки текста
             TextRenderer.DrawText(g, hpText, font, new System.Drawing.Point(textX, textY), Color.Black);
 
-            // Освободите ресурсы
             font.Dispose();
         }
 
@@ -132,22 +148,16 @@ namespace SanyaVsZondB
             this.Invalidate();
         }
 
-        private void SwitchForm(string newForm)
+        private void SwitchForm(int nextLevel)
         {
             this.Hide();
             Form nextForm;
-            switch (newForm)
-            {
-                case "MainMenuForm":
-                    nextForm = new MainMenuForm();
-                    break;
-                case "UpgradesForm":
-                    nextForm = new FirstToSecond(Game, _nextLevel);
-                    break;
-                default:
-                    nextForm = null;
-                    break;
-            }
+            if (nextLevel <= 0)
+                nextForm = new MainMenuForm();
+            if (nextLevel > 0 && nextLevel < _countLevels)
+                nextForm = new MovingToAnotherLevel(Game, _currentLevel + 1);
+           else 
+                nextForm = new MainMenuForm();
             nextForm.Show();
         }
 
@@ -155,7 +165,7 @@ namespace SanyaVsZondB
         {
             if (e.PropertyName == "IsAlive")
             {
-                SwitchForm("MainMenuForm");
+                SwitchForm(0);
             }
         }
 
@@ -164,7 +174,7 @@ namespace SanyaVsZondB
             if (e.PropertyName == "IsLevelClear")
             {
                 Map.Player.PropertyChanged -= Player_PropertyChanged;
-                SwitchForm("UpgradesForm");
+                SwitchForm(_currentLevel);
             }
         }
 

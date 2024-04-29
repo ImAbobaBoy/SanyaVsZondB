@@ -53,8 +53,14 @@ namespace SanyaVsZondB.Model
             foreach (var zondB in ZondBs)
             {
                 zondB.Move(MoveDirection.Calculated);
-                zondB.Hit();
             }
+            NotifyObservers();
+        }
+
+        public void HitZondB()
+        {
+            foreach (var zondB in ZondBs)
+                zondB.Hit();
             NotifyObservers();
         }
 

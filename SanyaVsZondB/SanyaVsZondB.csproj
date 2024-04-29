@@ -47,18 +47,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Control\Controller.cs" />
-    <Compile Include="LevelForm.cs">
+    <Compile Include="View\LevelForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LevelForm.Designer.cs">
+    <Compile Include="View\LevelForm.Designer.cs">
       <DependentUpon>LevelForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\Pistol.cs" />
-    <Compile Include="View\FirstToSecond.cs">
+    <Compile Include="View\MovingToAnotherLevel.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\FirstToSecond.Designer.cs">
-      <DependentUpon>FirstToSecond.cs</DependentUpon>
+    <Compile Include="View\MovingToAnotherLevel.Designer.cs">
+      <DependentUpon>MovingToAnotherLevel.cs</DependentUpon>
     </Compile>
     <Compile Include="View\SecondLevelForm.cs">
       <SubType>Form</SubType>
