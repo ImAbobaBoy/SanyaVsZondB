@@ -9,11 +9,11 @@ namespace SanyaVsZondB.Model
 {
     public abstract class Weapon
     {
-        public string Name {  get; private set; }
-        public int Damage { get; private set; }
-        public int BulletSpeed { get; private set; }
-        public int CountBulletsInQueue { get; private set; }
-        public int ShootingFrequency { get; private set; }
+        public abstract string Name {  get; set; }
+        public abstract int Damage { get; set; }
+        public abstract int BulletSpeed { get; set; }
+        public abstract int CountBulletsInQueue { get; set; }
+        public abstract int ShootingFrequency { get; set; }
         public Weapon(string name, int damage, int countBulletsInQueue, int bulletSpeed, int shootingFrequency)
         {
             Name = name;
@@ -23,9 +23,10 @@ namespace SanyaVsZondB.Model
             ShootingFrequency = shootingFrequency;
         }
 
-        public void IncreaseCountBulletsInQueue(int count)
-        {
-            CountBulletsInQueue += count;
-        }
+        public abstract void IncreaseCountBulletsInQueue(int count);
+
+        public abstract void IncreaseDamage(double multiplier);
+
+        public abstract void IncreaseShootingFrequency(int count);
     }
 }

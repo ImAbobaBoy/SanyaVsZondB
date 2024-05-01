@@ -79,7 +79,7 @@ namespace SanyaVsZondB.Model
         {
             var randomX = random.Next(Width);
             var randomY = random.Next(Height);
-            var zondB = new ZondB(Level.ZondBHp, Level.ZondBSpeed, 50, new Point(randomX, randomY), 20, Player, ZondBs, Flowers, this);
+            var zondB = new ZondB(Level.ZondBHp, Level.ZondBSpeed, 50, new Point(randomX, randomY), Level.ZondBDamage, Player, ZondBs, Flowers, this);
             ZondBs.Add(zondB);
             NotifyObservers();
             return zondB;
