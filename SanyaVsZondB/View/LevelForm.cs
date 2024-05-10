@@ -21,6 +21,9 @@ namespace SanyaVsZondB
         {
             InitializeComponent();
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
+
             Game = game;
             Map = CreateLevel(game, currentLevel);
             Map.Player.RegisterObserver(this);
@@ -174,6 +177,10 @@ namespace SanyaVsZondB
             if (e.PropertyName == "IsLevelClear")
             {
                 Map.Player.PropertyChanged -= Player_PropertyChanged;
+                Map.Player.IsWPressed = false;
+                Map.Player.IsAPressed = false;
+                Map.Player.IsSPressed = false;
+                Map.Player.IsDPressed = false;
                 SwitchForm(_currentLevel);
             }
         }

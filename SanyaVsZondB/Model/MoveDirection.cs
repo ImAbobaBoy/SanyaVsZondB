@@ -6,6 +6,7 @@
         Down,
         Left,
         Right,
-        Calculated
+        Calculated,
+        None
     }
 }

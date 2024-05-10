@@ -24,6 +24,8 @@ namespace SanyaVsZondB
         public MainMenuForm()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
 
             tabControl1 = new TabControl();
             tabControl1.Dock = DockStyle.Fill;

@@ -40,6 +40,8 @@ namespace SanyaVsZondB.View
             _whichOneToSwitch = whichOneToSwitch;
 
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
 
             this.Controls.Add(buttonMakeChanges1);
             this.Controls.Add(buttonMakeChanges2);

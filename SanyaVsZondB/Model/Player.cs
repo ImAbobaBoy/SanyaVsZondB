@@ -35,6 +35,10 @@ namespace SanyaVsZondB.Model
         public override Point Position { get; set; }
         private List<IObserver> observers = new List<IObserver>();
         private bool isAlive = true;
+        public bool IsWPressed { get; set; } = false;
+        public bool IsAPressed { get; set; } = false;
+        public bool IsSPressed { get; set; } = false;
+        public bool IsDPressed { get; set; } = false;
 
         public Player(
             int hp,
@@ -53,21 +57,14 @@ namespace SanyaVsZondB.Model
 
         public override void Move(Enum direction)
         {
-            switch (direction)
-            {
-                case MoveDirection.Up:
-                    Position.Y -= Speed;
-                    break;
-                case MoveDirection.Down:
-                    Position.Y += Speed;
-                    break;
-                case MoveDirection.Left:
-                    Position.X -= Speed;
-                    break;
-                case MoveDirection.Right:
-                    Position.X += Speed;
-                    break;
-            }
+            if (IsWPressed)
+                Position.Y -= Speed;
+            if (IsAPressed)
+                Position.X -= Speed;
+            if (IsSPressed)
+                Position.Y += Speed;
+            if (IsDPressed)
+                Position.X += Speed;
             NotifyObservers();
         }
 
@@ -82,6 +79,10 @@ namespace SanyaVsZondB.Model
         public override void Die()
         {
             IsAlive = false;
+            IsWPressed = false;
+            IsAPressed = false;
+            IsSPressed = false;
+            IsDPressed = false;
         }
 
         public override string GetImageFileName()
