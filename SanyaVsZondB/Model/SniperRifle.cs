@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace SanyaVsZondB.Model
 {
-    public class Pistol : Weapon
+    internal class SniperRifle : Weapon
     {
-        public static string WeaponName {  get; private set; }
+        public static string WeaponName { get; private set; }
         public override string Name { get; set; }
         public override int Damage { get; set; }
         public override int BulletSpeed { get; set; }
         public override int CountBulletsInQueue { get; set; }
         public override double ShootingFrequency { get; set; }
 
-        public Pistol(int damage, int countBulletsInQueue, int bulletSpeed, double shootingFrequency) 
+        public SniperRifle(int damage, int countBulletsInQueue, int bulletSpeed, double shootingFrequency)
             : base(WeaponName, damage, countBulletsInQueue, bulletSpeed, shootingFrequency)
         {
-            WeaponName = "Pistol";
+            WeaponName = "SniperRifle";
         }
 
         public override void IncreaseCountBulletsInQueue(int count)

@@ -31,7 +31,8 @@ namespace SanyaVsZondB.Model
                 (action: new Action(() => { Player.Weapon.IncreaseCountBulletsInQueue(1); }), name: "Увеличить кол-во пуль в очереди на 1"),
                 (action: new Action(() => { Player.Weapon.IncreaseDamage(1.2); }), name: "Увеличить урона на 20%"),
                 (action: new Action(() => { Player.Weapon.IncreaseShootingFrequency(1); }), name: "Увеличить скорость стрельбы на 1 п/с"),
-                //(action: new Action(() => { ; }), name: ""),
+                (action: new Action(() => { Player.ChangeWeapon(new Rifle(6, 1, 70, 10)); }), name: "Меняет оружие на винтовку"),
+                (action: new Action(() => { Player.ChangeWeapon(new SniperRifle(100, 1, 85, 0.5)); }), name: "Меняет оружие на снайперскую винтовку"),
                 //(action: new Action(() => { ; }), name: ""),
             };
 

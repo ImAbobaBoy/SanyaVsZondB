@@ -13,8 +13,8 @@ namespace SanyaVsZondB.Model
         public abstract int Damage { get; set; }
         public abstract int BulletSpeed { get; set; }
         public abstract int CountBulletsInQueue { get; set; }
-        public abstract int ShootingFrequency { get; set; }
-        public Weapon(string name, int damage, int countBulletsInQueue, int bulletSpeed, int shootingFrequency)
+        public abstract double ShootingFrequency { get; set; }
+        public Weapon(string name, int damage, int countBulletsInQueue, int bulletSpeed, double shootingFrequency)
         {
             Name = name;
             Damage = damage;

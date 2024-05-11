@@ -14,14 +14,16 @@ namespace SanyaVsZondB.Control
         public Timer ShootTimer { get; private set; }
         private int count = 0;
         private DateTime lastShotTime;
-        private readonly double delta;
+        private DateTime lastSpawnZondBTime;
+        private readonly double deltaShoot;
+        private const double deltaSpawnZondB = 2000;
 
         public Controller(Form view, Point point, Map game)
         {
             View = view;
             Point = point;
             Map = game;
-            delta = 1000 / Map.Player.Weapon.ShootingFrequency;
+            deltaShoot = 1000 / Map.Player.Weapon.ShootingFrequency;
 
             ZondBHitTimer = new Timer();
             ZondBHitTimer.Interval = 2000;
@@ -29,12 +31,12 @@ namespace SanyaVsZondB.Control
             ZondBHitTimer.Start();
 
             ZondBMoveTimer = new Timer();
-            ZondBMoveTimer.Interval = 6;
+            ZondBMoveTimer.Interval = 1;
             ZondBMoveTimer.Tick += UpdateZombiePositions;
             ZondBMoveTimer.Start();
 
             ShootTimer = new Timer();
-            ShootTimer.Interval = 1000 / Map.Player.Weapon.ShootingFrequency;
+            ShootTimer.Interval = (int)(1000 / Map.Player.Weapon.ShootingFrequency);
             ShootTimer.Tick += Shoot;
             ShootTimer.Stop();
         }
@@ -50,7 +52,7 @@ namespace SanyaVsZondB.Control
         private void MouseDown(object sender, MouseEventArgs e)
         {
             ShootTimer.Start();
-            if ((DateTime.Now - lastShotTime).TotalMilliseconds >= delta)
+            if ((DateTime.Now - lastShotTime).TotalMilliseconds >= deltaShoot)
             {
                 Map.Shoot();
                 lastShotTime = DateTime.Now;
@@ -67,9 +69,12 @@ namespace SanyaVsZondB.Control
             Map.MoveZondBS();
             if (Map.Bullets.Count > 0)
                 Map.MoveBullets();
-            if (count < Map.Level.ZondBCount)    
+            if (count < Map.Level.ZondBCount && (DateTime.Now - lastSpawnZondBTime).TotalMilliseconds >= deltaSpawnZondB)
+            {
                 Map.SpawnZondB();
-            count++;
+                lastSpawnZondBTime = DateTime.Now;
+                count++;
+            }
 
             Map.Player.Move(MoveDirection.None);
         }

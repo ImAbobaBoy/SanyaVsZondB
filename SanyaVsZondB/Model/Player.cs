@@ -85,6 +85,11 @@ namespace SanyaVsZondB.Model
             IsDPressed = false;
         }
 
+        public void ChangeWeapon(Weapon newWeapon)
+        {
+            Weapon = newWeapon;
+        }
+
         public override string GetImageFileName()
         {
             throw new NotImplementedException("Лол как ты умер");

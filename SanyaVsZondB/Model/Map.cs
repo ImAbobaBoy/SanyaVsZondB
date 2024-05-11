@@ -100,7 +100,7 @@ namespace SanyaVsZondB.Model
             {
                 var bullet = new Bullet(1, new Point(Player.Target), weapon.BulletSpeed, 15, new Point(Player.Position), weapon.Damage, ZondBs, Bullets);
                 Bullets.Add(bullet);
-                await Task.Delay(1000 / weapon.ShootingFrequency);
+                await Task.Delay((int)(1000 / weapon.ShootingFrequency));
                 NotifyObservers();
             }
         }
