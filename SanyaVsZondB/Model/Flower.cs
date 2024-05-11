@@ -13,12 +13,13 @@ namespace SanyaVsZondB.Model
         public override double Speed { get; set; }
         public override double HitboxRadius { get; set; }
         public override Point Position { get; set; }
-        public bool isFlowerAlive { get; private set; }
+        public bool IsFlowerAlive { get; private set; }
+        public static bool IsCanShoot { get; private set; }
         public List<Flower> Flowers { get; private set; }
 
         public Flower(int hp, Point target, double speed, double hitboxRadius, Point position, bool isFlowerAlive, List<Flower> flowers) : base(hp, target, speed, hitboxRadius, new Point(position))
         {
-            this.isFlowerAlive = isFlowerAlive;
+            this.IsFlowerAlive = isFlowerAlive;
             Flowers = flowers;
         }
 
@@ -43,6 +44,11 @@ namespace SanyaVsZondB.Model
         public override void Die()
         {
             Flowers.Remove(this);
+        }
+
+        public static void MakeCanShooting()
+        {
+            IsCanShoot = true;
         }
     }
 }

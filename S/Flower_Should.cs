@@ -22,14 +22,14 @@ namespace SanyaVsZondBTests
                 5.0, // Speed
                 10.0, // HitboxRadius
                 new Point(0, 0), // Position
-                true, // isFlowerAlive
+                true, // IsFlowerAlive
                 new List<Flower>()); // Flowers
         }
 
         [Test]
         public void Flower_InitialState_IsAlive()
         {
-            Assert.IsTrue(_flower.isFlowerAlive);
+            Assert.IsTrue(_flower.IsFlowerAlive);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace SanyaVsZondBTests
         //public void Flower_TakeDamage_KillsFlower_WhenHpIsZero()
         //{
         //    _flower.TakeDamage(100);
-        //    Assert.IsFalse(_flower.isFlowerAlive);
+        //    Assert.IsFalse(_flower.IsFlowerAlive);
         //}
 
         [Test]

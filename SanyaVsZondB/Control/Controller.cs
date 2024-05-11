@@ -12,18 +12,20 @@ namespace SanyaVsZondB.Control
         public Timer ZondBMoveTimer { get; private set; }
         public Timer ZondBHitTimer { get; private set; }
         public Timer ShootTimer { get; private set; }
+        public Timer TickTimer { get; private set; }
         private int count = 0;
         private DateTime lastShotTime;
         private DateTime lastSpawnZondBTime;
-        private readonly double deltaShoot;
-        private const double deltaSpawnZondB = 2000;
+        private readonly double _deltaShoot;
+        private const double _deltaSpawnZondB = 2000;
+        private int _countTicks;
 
         public Controller(Form view, Point point, Map game)
         {
             View = view;
             Point = point;
             Map = game;
-            deltaShoot = 1000 / Map.Player.Weapon.ShootingFrequency;
+            _deltaShoot = 1000 / Map.Player.Weapon.ShootingFrequency;
 
             ZondBHitTimer = new Timer();
             ZondBHitTimer.Interval = 2000;
@@ -52,9 +54,9 @@ namespace SanyaVsZondB.Control
         private void MouseDown(object sender, MouseEventArgs e)
         {
             ShootTimer.Start();
-            if ((DateTime.Now - lastShotTime).TotalMilliseconds >= deltaShoot)
+            if ((DateTime.Now - lastShotTime).TotalMilliseconds >= _deltaShoot)
             {
-                Map.Shoot();
+                Map.ShootByPlayer();
                 lastShotTime = DateTime.Now;
             }
         }
@@ -69,7 +71,7 @@ namespace SanyaVsZondB.Control
             Map.MoveZondBS();
             if (Map.Bullets.Count > 0)
                 Map.MoveBullets();
-            if (count < Map.Level.ZondBCount && (DateTime.Now - lastSpawnZondBTime).TotalMilliseconds >= deltaSpawnZondB)
+            if (count < Map.Level.ZondBCount && (DateTime.Now - lastSpawnZondBTime).TotalMilliseconds >= _deltaSpawnZondB)
             {
                 Map.SpawnZondB();
                 lastSpawnZondBTime = DateTime.Now;
@@ -81,12 +83,13 @@ namespace SanyaVsZondB.Control
 
         public void Shoot(object sender, EventArgs e)
         {
-            Map.Shoot();
+            Map.ShootByPlayer();
         }
 
         public void HitZondB(object sender, EventArgs e)
         {
             Map.HitZondB();
+            Map.ShootByFlower();
         }
 
         private void View_KeyDown(object sender, KeyEventArgs e)

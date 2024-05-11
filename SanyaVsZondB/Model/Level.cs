@@ -15,15 +15,17 @@ namespace SanyaVsZondB.Model
         public double ZondBSpeed { get; private set; }
         public Player Player { get; private set; }
         public int ZondBDamage { get; private set; }
+        public Data Data { get; private set; }
 
-        public Level(int zondBCount, double spawnFrequency, double zondBSpeed, int zondBHp, int zondBDamage, Player player)
+        public Level(int zondBCount, double spawnFrequency, double zondBSpeed, int zondBHp, int zondBDamage, Data data)
         {
             ZondBCount = zondBCount;
             SpawnFrequency = spawnFrequency;
             ZondBSpeed = zondBSpeed;
             ZondBHp = zondBHp;
-            Player = player;
+            Player = data.Player;
             ZondBDamage = zondBDamage;
+            Data = data;
         }
     }
 }

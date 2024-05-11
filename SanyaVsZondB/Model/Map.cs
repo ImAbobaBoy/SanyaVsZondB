@@ -20,6 +20,8 @@ namespace SanyaVsZondB.Model
         public List<Flower> Flowers { get; private set; }
         public Player Player { get; private set; }
         public int CountKilledZondB {  get; private set; }
+        private DateTime _lastSpawnFlower;
+        private const int DeltaSpawnFlower = 15000;
         public bool IsLevelClear
         {
             get { return IsLevelClear; }
@@ -85,15 +87,18 @@ namespace SanyaVsZondB.Model
             return zondB;
         }
 
-        public Flower SpawnFlower()
+        public void SpawnFlower()
         {
-            var flower = new Flower(100, new Point(0, 0), 0, 25, Player.Position, true, Flowers);
-            Flowers.Add(flower);
-            NotifyObservers();
-            return flower;
+            if ((DateTime.Now - _lastSpawnFlower).TotalMilliseconds >= DeltaSpawnFlower && Flowers.Count < 2)
+            {
+                var flower = new Flower(100, new Point(0, 0), 0, 25, Player.Position, true, Flowers);
+                Flowers.Add(flower);
+                NotifyObservers();
+                _lastSpawnFlower = DateTime.Now;
+            }
         }
 
-        public async void Shoot()
+        public async void ShootByPlayer()
         {
             var weapon = Level.Player.Weapon;
             for (var i = 0; i < weapon.CountBulletsInQueue; i++)
@@ -103,6 +108,18 @@ namespace SanyaVsZondB.Model
                 await Task.Delay((int)(1000 / weapon.ShootingFrequency));
                 NotifyObservers();
             }
+        }
+
+        public void ShootByFlower()
+        {
+            foreach (var flower in Flowers)
+                if (ZondBs.Count > 0)
+                    if (Flower.IsCanShoot)
+                    {
+                        var bullet = new Bullet(1, new Point(ZondBs[0].Position), 50, 15, new Point(flower.Position), 15, ZondBs, Bullets);
+                        Bullets.Add(bullet);
+                        NotifyObservers();
+                    }
         }
 
         public void IncrementCounKilledZondB()
