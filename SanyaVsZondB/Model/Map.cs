@@ -91,7 +91,15 @@ namespace SanyaVsZondB.Model
         {
             if ((DateTime.Now - _lastSpawnFlower).TotalMilliseconds >= DeltaSpawnFlower && Flowers.Count < 2)
             {
-                var flower = new Flower(100, new Point(0, 0), 0, 25, Player.Position, true, Flowers);
+                var flower = new Flower(
+                    (int)(100 * Level.Data.MultiplierFlowerHp), 
+                    new Point(0, 0), 
+                    0, 
+                    25, 
+                    Player.Position, 
+                    Flowers, 
+                    (int)(15 * Level.Data.MultiplierFlowerDamage),
+                    Level.Data.IsFlowerCanShoot);
                 Flowers.Add(flower);
                 NotifyObservers();
                 _lastSpawnFlower = DateTime.Now;
@@ -114,9 +122,9 @@ namespace SanyaVsZondB.Model
         {
             foreach (var flower in Flowers)
                 if (ZondBs.Count > 0)
-                    if (Flower.IsCanShoot)
+                    if (flower.IsCanShoot)
                     {
-                        var bullet = new Bullet(1, new Point(ZondBs[0].Position), 50, 15, new Point(flower.Position), 15, ZondBs, Bullets);
+                        var bullet = new Bullet(1, new Point(ZondBs[0].Position), 50, 15, new Point(flower.Position), flower.Damage, ZondBs, Bullets);
                         Bullets.Add(bullet);
                         NotifyObservers();
                     }

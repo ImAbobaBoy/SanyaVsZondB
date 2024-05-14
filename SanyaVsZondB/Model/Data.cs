@@ -15,6 +15,8 @@ namespace SanyaVsZondB.Model
         public double MultiplierZondBSpeed { get; private set; }
         public Player Player { get; private set; }
         public bool IsFlowerCanShoot { get; private set; }
+        public double MultiplierFlowerHp { get; private set; }
+        public double MultiplierFlowerDamage { get; private set; }
 
         public Data()
         {
@@ -22,7 +24,17 @@ namespace SanyaVsZondB.Model
             MultiplierZondBHp = 1;
             MultiplierZondBDamage = 1;
             MultiplierZondBSpeed = 1;
-            Player = new Player(100, new Point(0, 0), 5, 50, new Point(300, 300), new Pistol(100, 1, 50, 4), new List<Bullet>(), new List<ZondB>());
+            Player = new Player(
+                100, 
+                new Point(0, 0), 
+                5, 
+                50, 
+                new Point(300, 300), 
+                new Pistol(100, 1, 50, 4), 
+                new List<Bullet>(), 
+                new List<ZondB>());
+            MultiplierFlowerHp = 1;
+            MultiplierFlowerDamage = 1;
         }
 
         public void UpdateMultiplierZondBCount(double newValue)
@@ -52,6 +64,11 @@ namespace SanyaVsZondB.Model
         public void MakeFlowerCanShoot()
         {
             IsFlowerCanShoot = true;
+        }
+
+        public void UpdateMultiplierFlowerHp(double newValue)
+        {
+            MultiplierFlowerHp = newValue;
         }
     }
 }

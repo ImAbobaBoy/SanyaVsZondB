@@ -9,3 +9,14 @@ C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\
 C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.pdb
 C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.MainMenuForm.resources
 C:\Users\Omen 491\OneDrive\Рабочий стол\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.FirstLevelForm.resources
+C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\bin\Debug\SanyaVsZondB.exe.config
+C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\bin\Debug\SanyaVsZondB.exe
+C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\bin\Debug\SanyaVsZondB.pdb
+C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.csproj.AssemblyReference.cache
+C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.FirstLevelForm.resources
+C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.Properties.Resources.resources
+C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.MainMenuForm.resources
+C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.csproj.GenerateResource.cache
+C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.csproj.CoreCompileInputs.cache
+C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.exe
+C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.pdb

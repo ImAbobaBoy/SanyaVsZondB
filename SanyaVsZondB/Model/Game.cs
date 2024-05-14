@@ -24,7 +24,9 @@ namespace SanyaVsZondB.Model
                 (action: new Action(() => { Data.Player.Weapon.IncreaseShootingFrequency(1); }), name: "Увеличить скорость стрельбы на 1 п/с"),
                 (action: new Action(() => { Data.Player.ChangeWeapon(new Rifle(6, 1, 70, 10)); }), name: "Меняет оружие на винтовку"),
                 (action: new Action(() => { Data.Player.ChangeWeapon(new SniperRifle(100, 1, 85, 0.5)); }), name: "Меняет оружие на снайперскую винтовку"),
-                (action: new Action(() => { Flower.MakeCanShooting(); Data.MakeFlowerCanShoot(); }), name: "Ваши цветы теперь могут стрелять"),
+                (action: new Action(() => { Data.MakeFlowerCanShoot(); }), name: "Ваши цветы теперь могут стрелять"),
+                (action: new Action(() => { Data.UpdateMultiplierFlowerHp(1.5); }), name: "Увеличивает здоровье для всех ваших цветов"),
+                //(action: new Action(() => { ; }), name: ""),
                 //(action: new Action(() => { ; }), name: ""),
             };
 
