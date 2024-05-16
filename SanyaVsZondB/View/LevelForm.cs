@@ -16,6 +16,9 @@ namespace SanyaVsZondB
         public Game Game { get; private set; }
         private int _currentLevel;
         private const int _countLevels = 5;
+        private bool _isShowStats;
+        private Panel _statsPanel;
+        private Panel _pausePanel;
 
         public LevelForm(Game game, int currentLevel)
         {
@@ -32,6 +35,32 @@ namespace SanyaVsZondB
             Controller = new Controller(this, Point, Map);
             Controller.InitializeKeyHandling();
             _currentLevel = currentLevel;
+
+            _statsPanel = new Panel
+            {
+                Size = new Size(165, 170), // Размер панели
+                Location = new System.Drawing.Point(-300, -200), // Невидимое положение
+                BackColor = Color.LightGray, // Цвет фона
+                BorderStyle = BorderStyle.FixedSingle // Обводка
+            };
+            Controls.Add(_statsPanel);
+
+            _pausePanel = new Panel
+            {
+                Size = new Size(200, 100), // Установите желаемый размер
+                Location = new System.Drawing.Point(10, 10), // Установите позицию
+                BackColor = Color.DarkGray, // Установите цвет фона
+                Visible = false // Сначала делаем панель невидимой
+            };
+            Controls.Add(_pausePanel);
+            var resumeButton = new Button
+            {
+                Text = "Resume",
+                Size = new Size(80, 40), // Установите желаемый размер
+                Location = new System.Drawing.Point(50, 20) // Установите позицию
+            };
+            resumeButton.Click += ResumeButtonClick;
+            _pausePanel.Controls.Add(resumeButton);
 
             Map.Player.PropertyChanged += Player_PropertyChanged;
             Map.PropertyChanged += ClearLevel_PropertyChanged;
@@ -145,10 +174,61 @@ namespace SanyaVsZondB
             font.Dispose();
         }
 
+        public void ShowStats()
+        {
+            _isShowStats = !_isShowStats;
+            if (_isShowStats)
+            {
+                _statsPanel.Location = new System.Drawing.Point(0, 0);
+                _statsPanel.Visible = true;
+                FillStatsPanelWithGameData();
+            }
+            else
+                _statsPanel.Visible = false;
+        }
+
+        private void FillStatsPanelWithGameData()
+        {
+            TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
+            tableLayoutPanel.ColumnCount = 1; 
+            tableLayoutPanel.RowCount = 8; 
+            tableLayoutPanel.Dock = DockStyle.Fill; 
+
+            tableLayoutPanel.Controls.Add(new Label() { Text = $"HP: {Game.Data.Player.Hp}", AutoSize = true }, 0, 0); 
+            tableLayoutPanel.Controls.Add(new Label() { Text = $"Damage: {Game.Data.Player.Weapon.Damage}", AutoSize = true }, 0, 1); 
+            tableLayoutPanel.Controls.Add(new Label() { Text = $"Speed: {Game.Data.Player.Speed}", AutoSize = true }, 0, 1); 
+            tableLayoutPanel.Controls.Add(new Label() { Text = $"Weapon: {Game.Data.Player.Weapon.Name}", AutoSize = true }, 0, 1); 
+            tableLayoutPanel.Controls.Add(new Label() { Text = $"Shooting Frequency: {Game.Data.Player.Weapon.ShootingFrequency}", AutoSize = true }, 0, 1); 
+            tableLayoutPanel.Controls.Add(new Label() { Text = $"Bullets in Queue: {Game.Data.Player.Weapon.CountBulletsInQueue}", AutoSize = true }, 0, 1); 
+            tableLayoutPanel.Controls.Add(new Label() { Text = $"Flower HP: {100 * Game.Data.MultiplierFlowerHp}", AutoSize = true }, 0, 1); 
+            tableLayoutPanel.Controls.Add(new Label() { Text = $"Flower Damage: {15 * Game.Data.MultiplierFlowerDamage}", AutoSize = true }, 0, 1); 
+                                                                                   
+            _statsPanel.Controls.Add(tableLayoutPanel);
+        }
+
+        //public void ShowPauseForm()
+        //{
+        //    var pauseForm = new PauseForm();
+        //    if (!Controller.IsPaused)
+        //        pauseForm.Show();
+        //    else pauseForm.Hide();
+        //}
+
+        public void ShowPauseForm()
+        {
+            _pausePanel.Visible = !Controller.IsPaused;
+        }
+
         public void Update(IObservable observable)
         {
             Map.Player.Target = new Model.Point(Cursor.Position.X, Cursor.Position.Y);
             this.Invalidate();
+        }
+
+        private void ResumeButtonClick(object sender, EventArgs e)
+        {
+            Controller.MakePause();
+            this.Focus();
         }
 
         private void SwitchForm(int nextLevel)

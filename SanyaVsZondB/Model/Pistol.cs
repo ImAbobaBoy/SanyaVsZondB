@@ -19,6 +19,7 @@ namespace SanyaVsZondB.Model
             : base(WeaponName, damage, countBulletsInQueue, bulletSpeed, shootingFrequency)
         {
             WeaponName = "Pistol";
+            Name = "Pistol";
         }
 
         public override void IncreaseCountBulletsInQueue(int count)

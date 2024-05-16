@@ -6,21 +6,21 @@ namespace SanyaVsZondB.Control
 {
     public class Controller
     {
-        public Form View { get; private set; }
+        public LevelForm View { get; private set; }
         public Point Point { get; private set; }
         public Map Map {  get; private set; }
         public Timer ZondBMoveTimer { get; private set; }
         public Timer ZondBHitTimer { get; private set; }
         public Timer ShootTimer { get; private set; }
         public Timer TickTimer { get; private set; }
+        public bool IsPaused { get; private set; }
         private int count = 0;
         private DateTime lastShotTime;
         private DateTime lastSpawnZondBTime;
         private readonly double _deltaShoot;
         private const double _deltaSpawnZondB = 2000;
-        private int _countTicks;
 
-        public Controller(Form view, Point point, Map game)
+        public Controller(LevelForm view, Point point, Map game)
         {
             View = view;
             Point = point;
@@ -92,6 +92,23 @@ namespace SanyaVsZondB.Control
             Map.ShootByFlower();
         }
 
+        public void MakePause()
+        {
+            if (!IsPaused)
+            {
+                ZondBHitTimer.Stop();
+                ZondBMoveTimer.Stop();
+            }
+            else
+            {
+                ZondBHitTimer.Start();
+                ZondBMoveTimer.Start();
+            }
+            View.ShowPauseForm();
+            InitializeKeyHandling();
+            IsPaused = !IsPaused;
+        }
+
         private void View_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode.ToString())
@@ -111,6 +128,12 @@ namespace SanyaVsZondB.Control
                 case "E":
                     Map.SpawnFlower();
                     break;
+                case "Tab":
+                    View.ShowStats();
+                    break;
+                case "Escape":
+                    MakePause();
+                    break;
             }
         }
 
@@ -129,6 +152,8 @@ namespace SanyaVsZondB.Control
                     break;
                 case "S":
                     Map.Player.IsSPressed = false;
+                    break;
+                case "Escape":
                     break;
             }
         }
