@@ -9,16 +9,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace SanyaVsZondB
 {
     public partial class MainMenuForm : Form
     {
-        private Button buttonPlay;
-        private TabControl tabControl1;
-        private TabPage tabPage1;
-        private TabPage tabPage2;
-        private TabPage tabPage3;
+        private Button playButton;
+        private Button settingsButton;
+        private Button loadGameButton;
+        private Button quitGameButton;
+        private int _currentLevel = 1;
         public Game Game { get; private set; }
 
         public MainMenuForm()
@@ -27,23 +28,21 @@ namespace SanyaVsZondB
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
 
-            tabControl1 = new TabControl();
-            tabControl1.Dock = DockStyle.Fill;
-            tabControl1.TabPages.Add(tabPage1 = new TabPage("Экран 1"));
-            tabControl1.TabPages.Add(tabPage2 = new TabPage("Экран 2"));
-            tabControl1.TabPages.Add(tabPage3 = new TabPage("Экран 3"));
 
             Game = new Game();
 
             // Добавление кнопки на форму
-            this.Controls.Add(buttonPlay);
-            this.Controls.Add(tabControl1);
+            this.Controls.Add(playButton);
+            this.Controls.Add(settingsButton);
+            this.Controls.Add(loadGameButton);
+            this.Controls.Add(quitGameButton);
 
-            tabControl1.Appearance = TabAppearance.FlatButtons;
-            tabControl1.ItemSize = new Size(0, 1);
-            tabControl1.SizeMode = TabSizeMode.Fixed;
+            Game.Data.LoadLastTwoPropertiesFromFile();
 
-            buttonPlay.Click += new EventHandler(this.ButtonPlay_Click);
+            playButton.Click += new EventHandler(this.ButtonPlay_Click);
+            settingsButton.Click += new EventHandler(this.SettingsButton_Click);
+            loadGameButton.Click += new EventHandler(this.ButtonLoadGame_Click);
+            quitGameButton.Click += new EventHandler(this.ButtonQuitGame_Click);
             this.FormClosing += new FormClosingEventHandler(Form1_FormClosing);
         }
 
@@ -54,39 +53,25 @@ namespace SanyaVsZondB
 
         private void ButtonPlay_Click(object sender, EventArgs e)
         {
-            var level = new LevelForm(Game, 1);
+            var level = new LevelForm(Game, _currentLevel);
             SwitchForm(level);
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private void SettingsButton_Click(object sender, EventArgs e)
         {
-            //if (tabControl1.SelectedIndex == 0)
-            //{
-            //    var firstTabForm = new FirstLevelForm(Map);
-            //    firstTabForm.TopLevel = false;
-            //    firstTabForm.FormBorderStyle = FormBorderStyle.None;
-            //    firstTabForm.Dock = DockStyle.Fill;
-            //    tabPage1.Controls.Add(firstTabForm);
-            //    firstTabForm.Show();
-            //}
-            //if (tabControl1.SelectedIndex == 0)
-            //{
-            //    var secondTabForm = new SecondLevelForm(Map);
-            //    secondTabForm.TopLevel = false;
-            //    secondTabForm.FormBorderStyle = FormBorderStyle.None;
-            //    secondTabForm.Dock = DockStyle.Fill;
-            //    tabPage1.Controls.Add(secondTabForm);
-            //    secondTabForm.Show();
-            //}
-            //if (tabControl1.SelectedIndex == 0)
-            //{
-            //    var thirdTabForm = new FirstToSecond(Map, );
-            //    firstTabForm.TopLevel = false;
-            //    firstTabForm.FormBorderStyle = FormBorderStyle.None;
-            //    firstTabForm.Dock = DockStyle.Fill;
-            //    tabPage1.Controls.Add(firstTabForm);
-            //    firstTabForm.Show();
-            //}
+
+        }
+        private void ButtonLoadGame_Click(object sender, EventArgs e)
+        {
+            _currentLevel = Game.Data.LoadPropertiesFromFile();
+            var level = new LevelForm(Game, _currentLevel);
+            SwitchForm(level);
+        }
+
+        private void ButtonQuitGame_Click(object sender, EventArgs e)
+        {
+            Game.Data.SaveLastTwoPropertiesToFile();
+            Application.Exit();
         }
 
         private void SwitchForm(Form newForm)
@@ -110,6 +95,7 @@ namespace SanyaVsZondB
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Game.Data.SaveLastTwoPropertiesToFile();
             Application.Exit();
         }
     }

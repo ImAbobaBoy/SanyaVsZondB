@@ -19,4 +19,3 @@ C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\Sa
 C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.csproj.CoreCompileInputs.cache
 C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.exe
 C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.pdb
-C:\Users\Omen 491\OneDrive\Рабочий стол\умное\C#\SanyaVsZondB\SanyaVsZondB\obj\Debug\SanyaVsZondB.View.FirstLevelForm.resources

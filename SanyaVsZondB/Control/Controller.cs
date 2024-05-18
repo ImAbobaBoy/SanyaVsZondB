@@ -105,7 +105,6 @@ namespace SanyaVsZondB.Control
                 ZondBMoveTimer.Start();
             }
             View.ShowPauseForm();
-            InitializeKeyHandling();
             IsPaused = !IsPaused;
         }
 

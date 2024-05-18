@@ -50,12 +50,6 @@
     <Compile Include="Model\Data.cs" />
     <Compile Include="Model\Rifle.cs" />
     <Compile Include="Model\SniperRifle.cs" />
-    <Compile Include="PauseForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PauseForm.Designer.cs">
-      <DependentUpon>PauseForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\LevelForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,10 +63,6 @@
     <Compile Include="View\MovingToAnotherLevel.Designer.cs">
       <DependentUpon>MovingToAnotherLevel.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\SecondLevelForm.cs" />
-    <Compile Include="View\SecondLevelForm.Designer.cs">
-      <DependentUpon>SecondLevelForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\MainMenuForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,10 +71,6 @@
     </Compile>
     <Compile Include="Model\Flower.cs" />
     <Compile Include="Model\IObservable.cs" />
-    <Compile Include="View\FirstLevelForm.cs" />
-    <Compile Include="View\FirstLevelForm.Designer.cs">
-      <DependentUpon>FirstLevelForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Model\Bullet.cs" />
     <Compile Include="Model\MoveDirection.cs" />
     <Compile Include="Model\Entity.cs" />
@@ -98,9 +84,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\IObserver.cs" />
-    <EmbeddedResource Include="View\FirstLevelForm.resx">
-      <DependentUpon>FirstLevelForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

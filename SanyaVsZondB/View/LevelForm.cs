@@ -4,6 +4,7 @@ using SanyaVsZondB.View;
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace SanyaVsZondB
@@ -19,6 +20,9 @@ namespace SanyaVsZondB
         private bool _isShowStats;
         private Panel _statsPanel;
         private Panel _pausePanel;
+        private Panel _settingsPanel;
+        private TrackBar _musicTrackBar;
+        private TrackBar _soundTrackBar;
 
         public LevelForm(Game game, int currentLevel)
         {
@@ -39,28 +43,34 @@ namespace SanyaVsZondB
             _statsPanel = new Panel
             {
                 Size = new Size(165, 170), // Размер панели
-                Location = new System.Drawing.Point(-300, -200), // Невидимое положение
                 BackColor = Color.LightGray, // Цвет фона
-                BorderStyle = BorderStyle.FixedSingle // Обводка
+                BorderStyle = BorderStyle.FixedSingle, // Обводка
+                Visible = false
             };
             Controls.Add(_statsPanel);
 
             _pausePanel = new Panel
             {
-                Size = new Size(200, 100), // Установите желаемый размер
-                Location = new System.Drawing.Point(10, 10), // Установите позицию
+                Size = new Size(250, 140), // Установите желаемый размер
+                Location = new System.Drawing.Point((this.Width - 250) / 2, (this.Height - 140) / 2), // Установите позицию
                 BackColor = Color.DarkGray, // Установите цвет фона
                 Visible = false // Сначала делаем панель невидимой
             };
             Controls.Add(_pausePanel);
-            var resumeButton = new Button
+            AddButtonsToPausePanel();
+
+            _settingsPanel = new Panel
             {
-                Text = "Resume",
-                Size = new Size(80, 40), // Установите желаемый размер
-                Location = new System.Drawing.Point(50, 20) // Установите позицию
+                Size = new Size(250, 220), // Установите желаемый размер
+                Location = new System.Drawing.Point(((this.Width - 250) / 2) - 270, (this.Height - 140) / 2), // Установите позицию
+                BackColor = Color.DarkGray, // Установите цвет фона
+                Visible = false // Сначала делаем панель невидимой
             };
-            resumeButton.Click += ResumeButtonClick;
-            _pausePanel.Controls.Add(resumeButton);
+            Controls.Add(_settingsPanel);
+            AddControlsToSettingsPanel();
+
+            _musicTrackBar.Value = Game.Data.MusicVolume;
+            _soundTrackBar.Value = Game.Data.SoundVolume;
 
             Map.Player.PropertyChanged += Player_PropertyChanged;
             Map.PropertyChanged += ClearLevel_PropertyChanged;
@@ -187,6 +197,82 @@ namespace SanyaVsZondB
                 _statsPanel.Visible = false;
         }
 
+        public void AddButtonsToPausePanel()
+        {
+            var resumeButton = new Button
+            {
+                Text = "Resume",
+                Size = new Size(130, 40), // Установите желаемый размер
+                Location = new System.Drawing.Point(50, 20) // Установите позицию
+            };
+            resumeButton.Click += ResumeButtonClick;
+            _pausePanel.Controls.Add(resumeButton);
+
+            var mainMenuButton = new Button
+            {
+                Text = "Main Menu",
+                Size = new Size(130, 40), // Установите желаемый размер
+                Location = new System.Drawing.Point(50, 80) 
+            };
+            mainMenuButton.Click += MainMenuButtonClick;
+            _pausePanel.Controls.Add(mainMenuButton);
+        }
+
+        private void AddControlsToSettingsPanel()
+        {
+            var musicLabel = new Label
+            {
+                Text = "Музыка",
+                Location = new System.Drawing.Point(10, 20),
+                AutoSize = true
+            };
+            _settingsPanel.Controls.Add(musicLabel);
+
+            _musicTrackBar = new TrackBar
+            {
+                Location = new System.Drawing.Point(10, 40),
+                Size = new Size(200, 45),
+                Minimum = 0,
+                Maximum = 100,
+                Value = 50 // Установите начальное значение
+            };
+            _musicTrackBar.Scroll += MusicTrackBar_Scroll;
+            _settingsPanel.Controls.Add(_musicTrackBar);
+
+            var soundLabel = new Label
+            {
+                Text = "Звук",
+                Location = new System.Drawing.Point(10, 90),
+                AutoSize = true
+            };
+            _settingsPanel.Controls.Add(soundLabel);
+
+            _soundTrackBar = new TrackBar
+            {
+                Location = new System.Drawing.Point(10, 110),
+                Size = new Size(200, 45),
+                Minimum = 0,
+                Maximum = 100,
+                Value = 50 // Установите начальное значение
+            };
+            _soundTrackBar.Scroll += SoundTrackBar_Scroll;
+            _settingsPanel.Controls.Add(_soundTrackBar);
+        }
+
+        private void MusicTrackBar_Scroll(object sender, EventArgs e)
+        {
+            // Установите громкость музыки в соответствии с положением ползунка
+            // Например:
+            Game.Data.ChangeMusicVolume(_musicTrackBar.Value);
+        }
+
+        private void SoundTrackBar_Scroll(object sender, EventArgs e)
+        {
+            // Установите громкость звука в соответствии с положением ползунка
+            // Например:
+            Game.Data.ChangeSoundVolume(_soundTrackBar.Value);
+        }
+
         private void FillStatsPanelWithGameData()
         {
             TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
@@ -205,18 +291,10 @@ namespace SanyaVsZondB
                                                                                    
             _statsPanel.Controls.Add(tableLayoutPanel);
         }
-
-        //public void ShowPauseForm()
-        //{
-        //    var pauseForm = new PauseForm();
-        //    if (!Controller.IsPaused)
-        //        pauseForm.Show();
-        //    else pauseForm.Hide();
-        //}
-
         public void ShowPauseForm()
         {
             _pausePanel.Visible = !Controller.IsPaused;
+            _settingsPanel.Visible = !Controller.IsPaused;
         }
 
         public void Update(IObservable observable)
@@ -227,8 +305,14 @@ namespace SanyaVsZondB
 
         private void ResumeButtonClick(object sender, EventArgs e)
         {
+            Game.Data.SaveLastTwoPropertiesToFile();
             Controller.MakePause();
             this.Focus();
+        }
+
+        private void MainMenuButtonClick(object sender, EventArgs e)
+        {
+            SwitchForm(-1);
         }
 
         private void SwitchForm(int nextLevel)
@@ -261,12 +345,14 @@ namespace SanyaVsZondB
                 Map.Player.IsAPressed = false;
                 Map.Player.IsSPressed = false;
                 Map.Player.IsDPressed = false;
+                Game.Data.SavePropertiesToFile(_currentLevel);
                 SwitchForm(_currentLevel);
             }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Game.Data.SaveLastTwoPropertiesToFile();
             Application.Exit();
         }
     }
