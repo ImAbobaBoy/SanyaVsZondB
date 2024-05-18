@@ -47,6 +47,9 @@ namespace SanyaVsZondB.View
             this.Controls.Add(buttonMakeChanges2);
             this.Controls.Add(buttonMakeChanges3);
 
+            this.BackgroundImage = Image.FromFile("images\\MainMenuBackground.jpg");
+            this.BackgroundImageLayout = ImageLayout.Stretch; // или другой режим растяжения
+
             buttonMakeChanges1.Click += new EventHandler(this.ButtonMakeChanges1_Click);
             buttonMakeChanges2.Click += new EventHandler(this.ButtonMakeChanges2_Click);
             buttonMakeChanges3.Click += new EventHandler(this.ButtonMakeChanges3_Click);

@@ -4,6 +4,7 @@ using SanyaVsZondB.View;
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -23,6 +24,10 @@ namespace SanyaVsZondB
         private Panel _settingsPanel;
         private TrackBar _musicTrackBar;
         private TrackBar _soundTrackBar;
+        private Image _playerImage;
+        private Image _zondBImage;
+        private Image _flowerImage;
+        private Image _bulletImage;
 
         public LevelForm(Game game, int currentLevel)
         {
@@ -72,6 +77,14 @@ namespace SanyaVsZondB
             _musicTrackBar.Value = Game.Data.MusicVolume;
             _soundTrackBar.Value = Game.Data.SoundVolume;
 
+            _playerImage = Image.FromFile("images\\PlayerShooting.png");
+            _zondBImage = Image.FromFile("images\\ZondB.gif");
+            _flowerImage = Image.FromFile("images\\Flower2.png");
+            _bulletImage = Image.FromFile("images\\Bullet2.png");
+
+            this.BackgroundImage = Image.FromFile("images\\Background.jpg");
+            this.BackgroundImageLayout = ImageLayout.Stretch; // или другой режим растяжения
+
             Map.Player.PropertyChanged += Player_PropertyChanged;
             Map.PropertyChanged += ClearLevel_PropertyChanged;
             this.FormClosing += new FormClosingEventHandler(Form1_FormClosing);
@@ -108,32 +121,20 @@ namespace SanyaVsZondB
             if (Map.ZondBs.Count > 0)
                 foreach (var zondB in Map.ZondBs)
                 {
-                    DrawZombie(e.Graphics,
-                        (int)(zondB.Position.X - zondB.HitboxRadius),
-                        (int)(zondB.Position.Y - zondB.HitboxRadius),
-                        (int)zondB.HitboxRadius * 2,
-                        (int)zondB.HitboxRadius * 2);
+                    DrawPlayer(e, _zondBImage, zondB.Target, zondB.Position);
                     DrawZombieHp(e.Graphics, zondB.Position, zondB.Hp);
                 }
 
             if (Map.Bullets.Count > 0)
                 foreach (var bullet in Map.Bullets)
                 {
-                    DrawBullet(e.Graphics,
-                        (int)(bullet.Position.X - bullet.HitboxRadius),
-                        (int)(bullet.Position.Y - bullet.HitboxRadius),
-                        (int)bullet.HitboxRadius * 2,
-                        (int)bullet.HitboxRadius * 2);
+                    DrawPlayer(e, _bulletImage, bullet.Target, bullet.Position);
                 }
 
             if (Map.Flowers.Count > 0)
                 foreach (var flower in Map.Flowers)
                 {
-                    DrawFlower(e.Graphics,
-                        (int)(flower.Position.X - flower.HitboxRadius),
-                        (int)(flower.Position.Y - flower.HitboxRadius),
-                        (int)flower.HitboxRadius * 2,
-                        (int)flower.HitboxRadius * 2);
+                    DrawPlayer(e, _flowerImage, flower.Target, flower.Position);
                 }
 
             string hpText = $"HP: {Map.Player.Hp}";
@@ -143,10 +144,25 @@ namespace SanyaVsZondB
 
             base.OnPaint(e);
 
-            int x = (int)(Point.X - Map.Player.HitboxRadius);
-            int y = (int)(Point.Y - Map.Player.HitboxRadius);
+            DrawPlayer(e, _playerImage, Game.Data.Player.Target, Point);
+        }
 
-            DrawCircle(e.Graphics, x, y, (int)Map.Player.HitboxRadius * 2, (int)Map.Player.HitboxRadius * 2);
+        private void DrawPlayer(PaintEventArgs e, Image image, Model.Point target, Model.Point position)
+        {
+            double angle = Math.Atan2(target.Y - position.Y, target.X - position.X) * 180 / Math.PI;
+
+            Matrix rotationMatrix = new Matrix();
+            rotationMatrix.RotateAt((float)angle, new PointF((float)position.X, (float)position.Y)); // Использование положительного угла
+
+            e.Graphics.Transform = rotationMatrix;
+
+            var playerWidth = (int)image.Width;
+            var playerHeight = (int)image.Height;
+            var x = (int)(position.X - playerWidth / 2);
+            var y = (int)(position.Y - playerHeight / 2);
+            e.Graphics.DrawImage(image, x, y, playerWidth, playerHeight);
+
+            e.Graphics.Transform = new Matrix();
         }
 
         private void DrawFlower(Graphics g, int x, int y, int width, int height)

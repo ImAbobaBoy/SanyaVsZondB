@@ -17,7 +17,7 @@ namespace SanyaVsZondB.Model
             Y = point.Y;
         }
         
-        public Point(int x, int y)
+        public Point(double x, double y)
         {
             X = x;
             Y = y;

@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanyaVsZondB", "SanyaVsZond
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanyaVsZondBTests", "S\SanyaVsZondBTests.csproj", "{2920BB35-6BC3-45E2-B374-E3DB5F1F2564}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{48EB5DC6-6C23-4FF7-825E-4D0383E54D2C}"
+	ProjectSection(SolutionItems) = preProject
+		SanyaVsZondB\bin\Debug\images\ZondB.gif = SanyaVsZondB\bin\Debug\images\ZondB.gif
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

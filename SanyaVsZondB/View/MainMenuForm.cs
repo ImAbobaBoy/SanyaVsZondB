@@ -37,6 +37,9 @@ namespace SanyaVsZondB
             this.Controls.Add(loadGameButton);
             this.Controls.Add(quitGameButton);
 
+            this.BackgroundImage = Image.FromFile("images\\MainMenuBackground.jpg");
+            this.BackgroundImageLayout = ImageLayout.Stretch; // или другой режим растяжения
+
             Game.Data.LoadLastTwoPropertiesFromFile();
 
             playButton.Click += new EventHandler(this.ButtonPlay_Click);

@@ -19,6 +19,7 @@ namespace SanyaVsZondB.Model
         public override double HitboxRadius { get; set; }
         public override Point Position { get; set; }
         public List<Flower> Flowers { get; private set; }
+        public Image Image { get; private set; }
         public Map Map { get; private set; }
         private List<IObserver> observers = new List<IObserver>();
 

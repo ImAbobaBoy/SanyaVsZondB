@@ -1,4 +1,8 @@
-﻿namespace SanyaVsZondB
+﻿using System.Diagnostics.Tracing;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace SanyaVsZondB
 {
     partial class MainMenuForm
     {
@@ -36,39 +40,47 @@
             // 
             // playButton
             // 
-            this.playButton.Location = new System.Drawing.Point(this.ClientSize.Width, this.ClientSize.Height / 2); 
+            this.playButton.Location = new System.Drawing.Point(710, 190); 
             this.playButton.Name = "playButton";
-            this.playButton.Size = new System.Drawing.Size(300, 150); 
+            this.playButton.Size = new System.Drawing.Size(500, 167); 
             this.playButton.TabIndex = 0;
-            this.playButton.Text = "Play"; 
             this.playButton.UseVisualStyleBackColor = true;
+            this.playButton.Image = Image.FromFile("images\\NewGame2.png");
+            this.playButton.FlatStyle = FlatStyle.Flat;
+            this.playButton.BackColor = Color.Transparent;
             //
             // settingsButton
             //
-            this.settingsButton.Location = new System.Drawing.Point(500, 500);
+            this.settingsButton.Location = new System.Drawing.Point(710, 390);
             this.settingsButton.Name = "settingsButton";
-            this.settingsButton.Size = new System.Drawing.Size(300, 150);
+            this.settingsButton.Size = new System.Drawing.Size(500, 167);
             this.settingsButton.TabIndex = 0;
-            this.settingsButton.Text = "Settings";
             this.settingsButton.UseVisualStyleBackColor = true;
+            this.settingsButton.Image = Image.FromFile("images\\Options.png");
+            this.settingsButton.FlatStyle = FlatStyle.Flat;
+            this.settingsButton.BackColor = Color.Transparent;
             //
             // loadGameButton
             //
-            this.loadGameButton.Location = new System.Drawing.Point(900, 500);
+            this.loadGameButton.Location = new System.Drawing.Point(710, 590);
             this.loadGameButton.Name = "loadGameButton";
-            this.loadGameButton.Size = new System.Drawing.Size(300, 150);
+            this.loadGameButton.Size = new System.Drawing.Size(500, 167);
             this.loadGameButton.TabIndex = 0;
-            this.loadGameButton.Text = "Load Game";
             this.loadGameButton.UseVisualStyleBackColor = true;
+            this.loadGameButton.Image = Image.FromFile("images\\Load.png");
+            this.loadGameButton.FlatStyle = FlatStyle.Flat;
+            this.loadGameButton.BackColor = Color.Transparent;
             //
             // quitGameButton
             //
-            this.quitGameButton.Location = new System.Drawing.Point(1300, 500);
+            this.quitGameButton.Location = new System.Drawing.Point(710, 790);
             this.quitGameButton.Name = "quitGameButton";
-            this.quitGameButton.Size = new System.Drawing.Size(300, 150);
+            this.quitGameButton.Size = new System.Drawing.Size(500, 167);
             this.quitGameButton.TabIndex = 0;
-            this.quitGameButton.Text = "Quit";
             this.quitGameButton.UseVisualStyleBackColor = true;
+            this.quitGameButton.Image = Image.FromFile("images\\Exit.png");
+            this.quitGameButton.FlatStyle = FlatStyle.Flat;
+            this.quitGameButton.BackColor = Color.Transparent;
             // 
             // MainMenuForm
             // 
