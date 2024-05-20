@@ -1,4 +1,5 @@
-﻿using SanyaVsZondB.View;
+﻿using NAudio.Wave;
+using SanyaVsZondB.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace SanyaVsZondB.Model
         public Weapon Weapon { get; private set; }
         public List<ZondB> ZondBs { get; private set; }
         public List<Bullet> Bullets { get; private set; }
+        public Data Data { get; private set; }
         public bool IsAlive {  
             get { return isAlive;  }
             private set
@@ -33,12 +35,14 @@ namespace SanyaVsZondB.Model
         public override double Speed { get; set; }
         public override double HitboxRadius { get; set; }
         public override Point Position { get; set; }
-        private List<IObserver> observers = new List<IObserver>();
-        private bool isAlive = true;
         public bool IsWPressed { get; set; } = false;
         public bool IsAPressed { get; set; } = false;
         public bool IsSPressed { get; set; } = false;
         public bool IsDPressed { get; set; } = false;
+        private List<IObserver> observers = new List<IObserver>();
+        private bool isAlive = true;
+        private WaveChannel32 _soundChannel;
+        private WaveOut _waveOut;
 
         public Player(
             int hp,
@@ -48,11 +52,15 @@ namespace SanyaVsZondB.Model
             Point position,
             Weapon weapon,
             List<Bullet> bullets,
-            List<ZondB> zondBs) : base(hp, target, speed, hitboxRadius, position)
+            List<ZondB> zondBs,
+            Data data) 
+                : base(hp, target, speed, hitboxRadius, position)
         {
             Weapon = weapon;
             ZondBs = zondBs;
             Bullets = bullets;
+            Data = data;
+            _waveOut = new WaveOut();
         }
 
         public override void Move(Enum direction)
@@ -70,14 +78,26 @@ namespace SanyaVsZondB.Model
 
         public override void TakeDamage(int damage)
         {
+            var hitSound = new AudioFileReader("sounds\\HitPlayer.mp3");
+            _soundChannel = new WaveChannel32(hitSound);
+            _soundChannel.Volume = Data.SoundVolume / 100;
+            _waveOut.Init(_soundChannel);
             if (damage < Hp)
+            {
                 Hp -= damage;
+                _waveOut.Play();
+            }
             else if (damage >= Hp)
                 Die();
         }
 
         public override void Die()
         {
+            var hitSound = new AudioFileReader("sounds\\PlayerDie.mp3");
+            _soundChannel = new WaveChannel32(hitSound);
+            _soundChannel.Volume = Data.SoundVolume / 100;
+            _waveOut.Init(_soundChannel);
+            _waveOut.Play();
             IsAlive = false;
             IsWPressed = false;
             IsAPressed = false;
@@ -90,9 +110,19 @@ namespace SanyaVsZondB.Model
             Weapon = newWeapon;
         }
 
-        public override string GetImageFileName()
+        public override Image GetImageFileName()
         {
-            throw new NotImplementedException("Лол как ты умер");
+            switch (Weapon.Name)
+            {
+                case "Pistol":
+                    return Image.FromFile("images\\PlayerPistol.png");
+                case "Rifle":
+                    return Image.FromFile("images\\PlayerRifle.png");
+                case "SniperRifle":
+                    return Image.FromFile("images\\PlayerSniper.png");
+                default:
+                    return null;
+            }
         }
 
         public void RegisterObserver(IObserver observer)

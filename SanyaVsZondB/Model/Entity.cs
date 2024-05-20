@@ -26,7 +26,7 @@ namespace SanyaVsZondB.Model
             Position = position;
         }
 
-        public abstract string GetImageFileName();
+        public abstract Image GetImageFileName();
 
         public abstract void TakeDamage(int damage);
 

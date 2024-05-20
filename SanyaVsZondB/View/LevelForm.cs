@@ -1,12 +1,15 @@
-﻿using SanyaVsZondB.Control;
+﻿using NAudio.Wave;
+using SanyaVsZondB.Control;
 using SanyaVsZondB.Model;
 using SanyaVsZondB.View;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace SanyaVsZondB
 {
@@ -17,19 +20,17 @@ namespace SanyaVsZondB
         public Map Map { get; private set; }
         public Game Game { get; private set; }
         private int _currentLevel;
-        private const int _countLevels = 5;
         private bool _isShowStats;
         private Panel _statsPanel;
         private Panel _pausePanel;
         private Panel _settingsPanel;
         private TrackBar _musicTrackBar;
         private TrackBar _soundTrackBar;
-        private Image _playerImage;
-        private Image _zondBImage;
-        private Image _flowerImage;
-        private Image _bulletImage;
+        private WaveChannel32 _levelMusicChannel;
+        private WaveOut _waveOutLevel;
+        private const int _countLevels = 5;
 
-        public LevelForm(Game game, int currentLevel)
+        public LevelForm(Game game, int currentLevel, WaveOut waveOutLevel, WaveChannel32 levelMusicChannel)
         {
             InitializeComponent();
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
@@ -47,43 +48,46 @@ namespace SanyaVsZondB
 
             _statsPanel = new Panel
             {
-                Size = new Size(165, 170), // Размер панели
-                BackColor = Color.LightGray, // Цвет фона
-                BorderStyle = BorderStyle.FixedSingle, // Обводка
-                Visible = false
+                Size = new Size(165, 145), 
+                BorderStyle = BorderStyle.FixedSingle, 
+                Visible = false,
+                ForeColor = Color.Red,
+                BackColor = ColorTranslator.FromHtml("#140e10"),
             };
             Controls.Add(_statsPanel);
 
             _pausePanel = new Panel
             {
-                Size = new Size(250, 140), // Установите желаемый размер
-                Location = new System.Drawing.Point((this.Width - 250) / 2, (this.Height - 140) / 2), // Установите позицию
-                BackColor = Color.DarkGray, // Установите цвет фона
-                Visible = false // Сначала делаем панель невидимой
+                Size = new Size(600, 484), 
+                Location = new System.Drawing.Point((this.Width - 600) / 2, 298), 
+                Visible = false, 
+                ForeColor = ColorTranslator.FromHtml("#140e10"),
+                BackColor = ColorTranslator.FromHtml("#140e10"),
             };
             Controls.Add(_pausePanel);
             AddButtonsToPausePanel();
 
             _settingsPanel = new Panel
             {
-                Size = new Size(250, 220), // Установите желаемый размер
-                Location = new System.Drawing.Point(((this.Width - 250) / 2) - 270, (this.Height - 140) / 2), // Установите позицию
-                BackColor = Color.DarkGray, // Установите цвет фона
-                Visible = false // Сначала делаем панель невидимой
+                Size = new Size(250, 250), 
+                Location = new System.Drawing.Point(((this.Width - 600) / 2) - 270, 298), 
+                ForeColor = ColorTranslator.FromHtml("#140e10"),
+                BackColor = ColorTranslator.FromHtml("#140e10"),
+                Visible = false 
             };
             Controls.Add(_settingsPanel);
             AddControlsToSettingsPanel();
 
-            _musicTrackBar.Value = Game.Data.MusicVolume;
-            _soundTrackBar.Value = Game.Data.SoundVolume;
+            _musicTrackBar.Value = (int)Game.Data.MusicVolume;
+            _soundTrackBar.Value = (int)Game.Data.SoundVolume;
 
-            _playerImage = Image.FromFile("images\\PlayerShooting.png");
-            _zondBImage = Image.FromFile("images\\ZondB.gif");
-            _flowerImage = Image.FromFile("images\\Flower2.png");
-            _bulletImage = Image.FromFile("images\\Bullet2.png");
+            _levelMusicChannel = levelMusicChannel;
+            _levelMusicChannel.Volume = Game.Data.MusicVolume / 100;
+            _waveOutLevel = waveOutLevel;
+            waveOutLevel.Play();
 
             this.BackgroundImage = Image.FromFile("images\\Background.jpg");
-            this.BackgroundImageLayout = ImageLayout.Stretch; // или другой режим растяжения
+            this.BackgroundImageLayout = ImageLayout.Stretch;
 
             Map.Player.PropertyChanged += Player_PropertyChanged;
             Map.PropertyChanged += ClearLevel_PropertyChanged;
@@ -109,51 +113,40 @@ namespace SanyaVsZondB
             }
         }
 
-        private void DrawCircle(Graphics g, int x, int y, int width, int height)
-        {
-            SolidBrush brush = new SolidBrush(Color.Red);
-            g.FillEllipse(brush, x, y, width, height);
-            brush.Dispose();
-        }
-
         protected override void OnPaint(PaintEventArgs e)
         {
             if (Map.ZondBs.Count > 0)
                 foreach (var zondB in Map.ZondBs)
                 {
-                    DrawPlayer(e, _zondBImage, zondB.Target, zondB.Position);
+                    DrawObject(e, zondB.GetImageFileName(), zondB.Target, zondB.Position);
                     DrawZombieHp(e.Graphics, zondB.Position, zondB.Hp);
                 }
+            if (Map.Flowers.Count > 0)
+                foreach (var flower in Map.Flowers)
+                    DrawObject(e, flower.GetImageFileName(), flower.Target, flower.Position);
 
             if (Map.Bullets.Count > 0)
                 foreach (var bullet in Map.Bullets)
-                {
-                    DrawPlayer(e, _bulletImage, bullet.Target, bullet.Position);
-                }
+                    DrawObject(e, bullet.GetImageFileName(), bullet.Target, bullet.Position);
 
-            if (Map.Flowers.Count > 0)
-                foreach (var flower in Map.Flowers)
-                {
-                    DrawPlayer(e, _flowerImage, flower.Target, flower.Position);
-                }
-
-            string hpText = $"HP: {Map.Player.Hp}";
-            Font font = new Font("Arial", 12);
-            Brush brush = Brushes.Black;
+            var hpText = $"HP: {Map.Player.Hp}";
+            var font = new Font("Arial", 12);
+            var brush = Brushes.Black;
             e.Graphics.DrawString(hpText, font, brush, new PointF(this.ClientSize.Width - 100, 10));
 
             base.OnPaint(e);
 
-            DrawPlayer(e, _playerImage, Game.Data.Player.Target, Point);
+            DrawObject(e, Game.Data.Player.GetImageFileName(), Game.Data.Player.Target, Point);
         }
 
-        private void DrawPlayer(PaintEventArgs e, Image image, Model.Point target, Model.Point position)
+        private void DrawObject(PaintEventArgs e, Image image, Model.Point target, Model.Point position)
         {
             double angle = Math.Atan2(target.Y - position.Y, target.X - position.X) * 180 / Math.PI;
 
             Matrix rotationMatrix = new Matrix();
             rotationMatrix.RotateAt((float)angle, new PointF((float)position.X, (float)position.Y)); // Использование положительного угла
 
+            GraphicsState state = e.Graphics.Save();
             e.Graphics.Transform = rotationMatrix;
 
             var playerWidth = (int)image.Width;
@@ -162,28 +155,7 @@ namespace SanyaVsZondB
             var y = (int)(position.Y - playerHeight / 2);
             e.Graphics.DrawImage(image, x, y, playerWidth, playerHeight);
 
-            e.Graphics.Transform = new Matrix();
-        }
-
-        private void DrawFlower(Graphics g, int x, int y, int width, int height)
-        {
-            SolidBrush brush = new SolidBrush(Color.Yellow);
-            g.FillEllipse(brush, x, y, width, height);
-            brush.Dispose();
-        }
-
-        private void DrawBullet(Graphics g, int x, int y, int width, int height)
-        {
-            SolidBrush brush = new SolidBrush(Color.Blue);
-            g.FillEllipse(brush, x, y, width, height);
-            brush.Dispose();
-        }
-
-        private void DrawZombie(Graphics g, int x, int y, int width, int height)
-        {
-            SolidBrush brush = new SolidBrush(Color.Green);
-            g.FillEllipse(brush, x, y, width, height);
-            brush.Dispose();
+            e.Graphics.Restore(state);
         }
 
         private void DrawZombieHp(Graphics g, Model.Point zombiePosition, int hp)
@@ -192,8 +164,8 @@ namespace SanyaVsZondB
 
             string hpText = $"HP: {hp}";
 
-            int textX = (int)zombiePosition.X - 30; 
-            int textY = (int)zombiePosition.Y - 70; 
+            var textX = (int)zombiePosition.X - 30; 
+            var textY = (int)zombiePosition.Y - 70; 
 
             TextRenderer.DrawText(g, hpText, font, new System.Drawing.Point(textX, textY), Color.Black);
 
@@ -213,22 +185,30 @@ namespace SanyaVsZondB
                 _statsPanel.Visible = false;
         }
 
-        public void AddButtonsToPausePanel()
+        private void AddButtonsToPausePanel()
         {
             var resumeButton = new Button
             {
-                Text = "Resume",
-                Size = new Size(130, 40), // Установите желаемый размер
-                Location = new System.Drawing.Point(50, 20) // Установите позицию
+                Image = Image.FromFile("images\\Resume.png"),
+                Size = new Size(500, 167), 
+                Location = new System.Drawing.Point(50, 50),
+                TabIndex = 0,
+                UseVisualStyleBackColor = true,
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.Transparent,
             };
             resumeButton.Click += ResumeButtonClick;
             _pausePanel.Controls.Add(resumeButton);
 
             var mainMenuButton = new Button
             {
-                Text = "Main Menu",
-                Size = new Size(130, 40), // Установите желаемый размер
-                Location = new System.Drawing.Point(50, 80) 
+                Image = Image.FromFile("images\\Menu.png"),
+                Size = new Size(500, 167),
+                Location = new System.Drawing.Point(50, 267),
+                TabIndex = 0,
+                UseVisualStyleBackColor = true,
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.Transparent,
             };
             mainMenuButton.Click += MainMenuButtonClick;
             _pausePanel.Controls.Add(mainMenuButton);
@@ -240,7 +220,9 @@ namespace SanyaVsZondB
             {
                 Text = "Музыка",
                 Location = new System.Drawing.Point(10, 20),
-                AutoSize = true
+                AutoSize = true,
+                ForeColor = Color.Red,
+                Font = new System.Drawing.Font("Segoe UI", 10)
             };
             _settingsPanel.Controls.Add(musicLabel);
 
@@ -250,7 +232,7 @@ namespace SanyaVsZondB
                 Size = new Size(200, 45),
                 Minimum = 0,
                 Maximum = 100,
-                Value = 50 // Установите начальное значение
+                Value = 50 
             };
             _musicTrackBar.Scroll += MusicTrackBar_Scroll;
             _settingsPanel.Controls.Add(_musicTrackBar);
@@ -259,7 +241,9 @@ namespace SanyaVsZondB
             {
                 Text = "Звук",
                 Location = new System.Drawing.Point(10, 90),
-                AutoSize = true
+                AutoSize = true,
+                ForeColor = Color.Red,
+                Font = new System.Drawing.Font("Segoe UI", 10)
             };
             _settingsPanel.Controls.Add(soundLabel);
 
@@ -269,7 +253,7 @@ namespace SanyaVsZondB
                 Size = new Size(200, 45),
                 Minimum = 0,
                 Maximum = 100,
-                Value = 50 // Установите начальное значение
+                Value = 50 
             };
             _soundTrackBar.Scroll += SoundTrackBar_Scroll;
             _settingsPanel.Controls.Add(_soundTrackBar);
@@ -277,15 +261,12 @@ namespace SanyaVsZondB
 
         private void MusicTrackBar_Scroll(object sender, EventArgs e)
         {
-            // Установите громкость музыки в соответствии с положением ползунка
-            // Например:
+            _levelMusicChannel.Volume = (float)_musicTrackBar.Value / 100;
             Game.Data.ChangeMusicVolume(_musicTrackBar.Value);
         }
 
         private void SoundTrackBar_Scroll(object sender, EventArgs e)
         {
-            // Установите громкость звука в соответствии с положением ползунка
-            // Например:
             Game.Data.ChangeSoundVolume(_soundTrackBar.Value);
         }
 
@@ -296,17 +277,26 @@ namespace SanyaVsZondB
             tableLayoutPanel.RowCount = 8; 
             tableLayoutPanel.Dock = DockStyle.Fill; 
 
-            tableLayoutPanel.Controls.Add(new Label() { Text = $"HP: {Game.Data.Player.Hp}", AutoSize = true }, 0, 0); 
-            tableLayoutPanel.Controls.Add(new Label() { Text = $"Damage: {Game.Data.Player.Weapon.Damage}", AutoSize = true }, 0, 1); 
-            tableLayoutPanel.Controls.Add(new Label() { Text = $"Speed: {Game.Data.Player.Speed}", AutoSize = true }, 0, 1); 
-            tableLayoutPanel.Controls.Add(new Label() { Text = $"Weapon: {Game.Data.Player.Weapon.Name}", AutoSize = true }, 0, 1); 
-            tableLayoutPanel.Controls.Add(new Label() { Text = $"Shooting Frequency: {Game.Data.Player.Weapon.ShootingFrequency}", AutoSize = true }, 0, 1); 
-            tableLayoutPanel.Controls.Add(new Label() { Text = $"Bullets in Queue: {Game.Data.Player.Weapon.CountBulletsInQueue}", AutoSize = true }, 0, 1); 
-            tableLayoutPanel.Controls.Add(new Label() { Text = $"Flower HP: {100 * Game.Data.MultiplierFlowerHp}", AutoSize = true }, 0, 1); 
-            tableLayoutPanel.Controls.Add(new Label() { Text = $"Flower Damage: {15 * Game.Data.MultiplierFlowerDamage}", AutoSize = true }, 0, 1); 
+            tableLayoutPanel.Controls
+                .Add(new Label() { Text = $"HP: {Game.Data.Player.Hp}", AutoSize = true, ForeColor = Color.White }, 0, 0); 
+            tableLayoutPanel.Controls
+                .Add(new Label() { Text = $"Damage: {Game.Data.Player.Weapon.Damage}", AutoSize = true, ForeColor = Color.White }, 0, 1); 
+            tableLayoutPanel.Controls
+                .Add(new Label() { Text = $"Speed: {Game.Data.Player.Speed}", AutoSize = true, ForeColor = Color.White }, 0, 1); 
+            tableLayoutPanel.Controls
+                .Add(new Label() { Text = $"Weapon: {Game.Data.Player.Weapon.Name}", AutoSize = true, ForeColor = Color.White }, 0, 1); 
+            tableLayoutPanel.Controls
+                .Add(new Label() { Text = $"Shooting Frequency: {Game.Data.Player.Weapon.ShootingFrequency}", AutoSize = true, ForeColor = Color.White }, 0, 1); 
+            tableLayoutPanel.Controls
+                .Add(new Label() { Text = $"Bullets in Queue: {Game.Data.Player.Weapon.CountBulletsInQueue}", AutoSize = true, ForeColor = Color.White }, 0, 1); 
+            tableLayoutPanel.Controls
+                .Add(new Label() { Text = $"Flower HP: {100 * Game.Data.MultiplierFlowerHp}", AutoSize = true, ForeColor = Color.White }, 0, 1); 
+            tableLayoutPanel.Controls
+                .Add(new Label() { Text = $"Flower Damage: {15 * Game.Data.MultiplierFlowerDamage}", AutoSize = true, ForeColor = Color.White }, 0, 1); 
                                                                                    
             _statsPanel.Controls.Add(tableLayoutPanel);
         }
+
         public void ShowPauseForm()
         {
             _pausePanel.Visible = !Controller.IsPaused;
@@ -337,19 +327,20 @@ namespace SanyaVsZondB
             Form nextForm;
             if (nextLevel <= 0)
                 nextForm = new MainMenuForm();
-            if (nextLevel > 0 && nextLevel < _countLevels)
-                nextForm = new MovingToAnotherLevel(Game, _currentLevel + 1);
-           else 
+            else if (nextLevel > 0 && nextLevel < _countLevels)
+                nextForm = new MovingToAnotherLevel(Game, _currentLevel + 1, _waveOutLevel, _levelMusicChannel);
+            else 
                 nextForm = new MainMenuForm();
             nextForm.Show();
+            Controller.StopTimers();
+            this.Dispose();
+            _waveOutLevel.Stop();
         }
 
         private void Player_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsAlive")
-            {
                 SwitchForm(0);
-            }
         }
 
         private void ClearLevel_PropertyChanged(object sender, PropertyChangedEventArgs e)

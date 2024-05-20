@@ -1,4 +1,5 @@
-﻿using SanyaVsZondB.Model;
+﻿using NAudio.Wave;
+using SanyaVsZondB.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +25,10 @@ namespace SanyaVsZondB.View
         private int _randomZondBImprovementIndexSecond;
         private int _randomZondBImprovementIndexThird;
         private int _whichOneToSwitch;
-        public MovingToAnotherLevel(Game game, int whichOneToSwitch)
+        private WaveOut _waveOutLevel;
+        private WaveOut _waveOut;
+        private WaveChannel32 _levelMusicChannel;
+        public MovingToAnotherLevel(Game game, int whichOneToSwitch, WaveOut waveOutLevel, WaveChannel32 levelMusicChannel)
         {
             var rnd = new Random();
             Game = game;
@@ -48,7 +52,15 @@ namespace SanyaVsZondB.View
             this.Controls.Add(buttonMakeChanges3);
 
             this.BackgroundImage = Image.FromFile("images\\MainMenuBackground.jpg");
-            this.BackgroundImageLayout = ImageLayout.Stretch; // или другой режим растяжения
+            this.BackgroundImageLayout = ImageLayout.Stretch;
+
+            _waveOutLevel = waveOutLevel;
+            _levelMusicChannel = levelMusicChannel;
+
+            _waveOut = new WaveOut();
+            _waveOut.Init(new AudioFileReader("music\\MainMenuMusic.mp3"));
+            _waveOut.Volume = Game.Data.MusicVolume / 100;
+            _waveOut.Play();
 
             buttonMakeChanges1.Click += new EventHandler(this.ButtonMakeChanges1_Click);
             buttonMakeChanges2.Click += new EventHandler(this.ButtonMakeChanges2_Click);
@@ -85,21 +97,22 @@ namespace SanyaVsZondB.View
 
         private void SwitchForm(int nextLevel)
         {
+            _waveOut.Dispose();
             this.Hide();
             Form nextForm;
             switch (nextLevel)
             {
                 case 2:
-                    nextForm = new LevelForm(Game, 2);
+                    nextForm = new LevelForm(Game, 2, _waveOutLevel, _levelMusicChannel);
                     break;
                 case 3:
-                    nextForm = new LevelForm(Game, 3);
+                    nextForm = new LevelForm(Game, 3, _waveOutLevel, _levelMusicChannel);
                     break;
                 case 4:
-                    nextForm = new LevelForm(Game, 4);
+                    nextForm = new LevelForm(Game, 4, _waveOutLevel, _levelMusicChannel);
                     break;
                 case 5:
-                    nextForm = new LevelForm(Game, 5);
+                    nextForm = new LevelForm(Game, 5, _waveOutLevel, _levelMusicChannel);
                     break;
                 default:
                     nextForm = null;

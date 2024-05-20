@@ -28,7 +28,8 @@ namespace SanyaVsZondB.Model
             Point position,
             int damage,
             List<ZondB> zondBs,
-            List<Bullet> bullets) : base(hp, new Point(target), speed, hitboxRadius, position)
+            List<Bullet> bullets) 
+                : base(hp, new Point(target), speed, hitboxRadius, position)
         {
             Damage = damage;
             ZondBs = zondBs;
@@ -55,10 +56,7 @@ namespace SanyaVsZondB.Model
             Position.Y += _dy * Speed;
         }
 
-        public override string GetImageFileName()
-        {
-            throw new NotImplementedException();
-        }
+        public override Image GetImageFileName() => Image.FromFile("images\\Bullet.png");
 
         public override void TakeDamage(int damage)
         {

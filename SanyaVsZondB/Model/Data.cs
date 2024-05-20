@@ -24,8 +24,8 @@ namespace SanyaVsZondB.Model
         public double MultiplierWeaponDamage { get; private set; }
         public int AdditionalWeaponShootingFrequency { get; private set; }
         public int AdditionalWeaponBulletsInQueue { get; private set; }
-        public int MusicVolume { get; private set; }
-        public int SoundVolume { get; private set; }
+        public float MusicVolume { get; private set; }
+        public float SoundVolume { get; private set; }
 
         private const int InitialPlayerHP = 100;
         private const double InitialPlayerSpeed = 5;
@@ -47,7 +47,8 @@ namespace SanyaVsZondB.Model
                 new Point(300, 300),
                 _initialWeapon, 
                 new List<Bullet>(), 
-                new List<ZondB>());
+                new List<ZondB>(),
+                this);
             MultiplierFlowerHp = 1;
             MultiplierFlowerDamage = 1;
             MultiplierWeaponDamage = 1;
@@ -160,7 +161,7 @@ namespace SanyaVsZondB.Model
                 AdditionalWeaponBulletsInQueue = int.Parse(reader.ReadLine());
                 Player.Hp = int.Parse(reader.ReadLine());
                 Player.Speed = double.Parse(reader.ReadLine());
-                Player.Weapon.Name = reader.ReadLine();
+                LoadPlayerWeaponFromFile(reader.ReadLine());
                 Player.Weapon.CountBulletsInQueue = int.Parse(reader.ReadLine());
                 Player.Weapon.ShootingFrequency = double.Parse(reader.ReadLine());
                 currentLevel = int.Parse(reader.ReadLine());

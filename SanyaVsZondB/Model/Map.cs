@@ -3,9 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NAudio.Wave;
+using System.Windows.Media;
+using System.IO;
+using System.Windows.Forms;
 
 namespace SanyaVsZondB.Model
 {
@@ -21,7 +26,9 @@ namespace SanyaVsZondB.Model
         public Player Player { get; private set; }
         public int CountKilledZondB {  get; private set; }
         private DateTime _lastSpawnFlower;
+        private WaveChannel32 _flowerChannel;
         private const int DeltaSpawnFlower = 15000;
+        private readonly WaveOut _waveOutFlower;
         public bool IsLevelClear
         {
             get { return IsLevelClear; }
@@ -48,6 +55,7 @@ namespace SanyaVsZondB.Model
             Flowers = new List<Flower>();
             random = new Random();
             Player = level.Player;
+            _waveOutFlower = new WaveOut();
         }
 
         public void MoveZondBS()
@@ -81,7 +89,7 @@ namespace SanyaVsZondB.Model
         {
             var randomX = random.Next(Width);
             var randomY = random.Next(Height);
-            var zondB = new ZondB(Level.ZondBHp, Level.ZondBSpeed, 50, new Point(randomX, randomY), Level.ZondBDamage, Player, ZondBs, Flowers, this);
+            var zondB = new ZondB(Level.ZondBHp, Level.ZondBSpeed, 50, new Point(randomX, randomY), Level.ZondBDamage, Player, ZondBs, Flowers, this, Level.Data);
             ZondBs.Add(zondB);
             NotifyObservers();
             return zondB;
@@ -91,6 +99,11 @@ namespace SanyaVsZondB.Model
         {
             if ((DateTime.Now - _lastSpawnFlower).TotalMilliseconds >= DeltaSpawnFlower && Flowers.Count < 2)
             {
+                var spawnSound = new AudioFileReader("sounds\\FlowerSpawn.wav");
+                _flowerChannel = new WaveChannel32(spawnSound);
+                _flowerChannel.Volume = Level.Data.SoundVolume / 100;
+                _waveOutFlower.Init(_flowerChannel);
+                _waveOutFlower.Play();
                 var flower = new Flower(
                     (int)(100 * Level.Data.MultiplierFlowerHp), 
                     new Point(0, 0), 
@@ -108,6 +121,27 @@ namespace SanyaVsZondB.Model
 
         public async void ShootByPlayer()
         {
+            //отложу до лучших времен
+            //AudioFileReader audioFile;
+            //switch (Level.Data.Player.Weapon.Name)
+            //{
+            //    case "Pistol":
+            //        audioFile = new AudioFileReader("sounds\\WeaponPistol.wav");
+            //        break;
+            //    case "Rifle":
+            //        audioFile = new AudioFileReader("sounds\\WeaponRifle.wav");
+            //        break;
+            //    case "SniperRifle":
+            //        audioFile = new AudioFileReader("sounds\\WeaponSniperRifle.wav");
+            //        break;
+            //    default:
+            //        audioFile = null;
+            //        break;
+            //}
+            //_soundChannel = new WaveChannel32(audioFile);
+            //_soundChannel.Volume = Level.Data.SoundVolume / 100;
+            //_waveOut.Init(_soundChannel);
+            //_waveOut.Play();
             var weapon = Level.Player.Weapon;
             for (var i = 0; i < weapon.CountBulletsInQueue; i++)
             {
@@ -117,6 +151,7 @@ namespace SanyaVsZondB.Model
                 NotifyObservers();
             }
         }
+
 
         public void ShootByFlower()
         {

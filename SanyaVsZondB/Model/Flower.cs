@@ -1,5 +1,7 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,18 +19,23 @@ namespace SanyaVsZondB.Model
         public List<Flower> Flowers { get; private set; }
         public int Damage { get; private set; }
 
-        public Flower(int hp, Point target, double speed, double hitboxRadius, Point position, List<Flower> flowers, int damage, bool isFlowerCanShoot) 
-            : base(hp, target, speed, hitboxRadius, new Point(position))
+        public Flower(
+            int hp, 
+            Point target, 
+            double speed, 
+            double hitboxRadius, 
+            Point position, 
+            List<Flower> flowers, 
+            int damage, 
+            bool isFlowerCanShoot) 
+                : base(hp, target, speed, hitboxRadius, new Point(position))
         {
             Flowers = flowers;
             Damage = damage;
             IsCanShoot = isFlowerCanShoot;
         }
 
-        public override string GetImageFileName()
-        {
-            throw new NotImplementedException();
-        }
+        public override Image GetImageFileName() => Image.FromFile("images\\Flower.png");
 
         public override void Move(Enum direction)
         {

@@ -1,4 +1,5 @@
-﻿using SanyaVsZondB.View;
+﻿using NAudio.Wave;
+using SanyaVsZondB.View;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,7 +22,10 @@ namespace SanyaVsZondB.Model
         public List<Flower> Flowers { get; private set; }
         public Image Image { get; private set; }
         public Map Map { get; private set; }
+        public Data Data { get; private set; }
         private List<IObserver> observers = new List<IObserver>();
+        private WaveChannel32 _zondBHitChannel;
+        private WaveOut _waveOutZondB;
 
         public ZondB(
             int hp,
@@ -32,13 +36,17 @@ namespace SanyaVsZondB.Model
             Player player,
             List<ZondB> zondBS,
             List<Flower> flowers,
-            Map map) : base(hp, player.Target, speed, hitbox, position)
+            Map map,
+            Data data) 
+                : base(hp, player.Target, speed, hitbox, position)
         {
             Damage = damage;
             Player = player;
             ZondBS = zondBS;
             Flowers = flowers;
             Map = map;
+            _waveOutZondB = new WaveOut();
+            Data = data;
         }
 
         public void Hit()
@@ -62,13 +70,16 @@ namespace SanyaVsZondB.Model
             Position.Y += dy * Speed;
         }
 
-        public override string GetImageFileName()
-        {
-            throw new NotImplementedException();
-        }
+        public override Image GetImageFileName() => Image.FromFile("images\\ZondB.gif");
 
         public override void TakeDamage(int damage)
         {
+            // так же как и Map, потом может найду способ не вызывать эксепшен
+            //var hitSound = new AudioFileReader("sounds\\HitZondB.mp3");
+            //_zondBHitChannel = new WaveChannel32(hitSound);
+            //_zondBHitChannel.Volume = Data.SoundVolume / 100;
+            //_waveOutZondB.Init(_zondBHitChannel);
+            //_waveOutZondB.Play();
             if (damage < Hp)
                 Hp -= damage;
             else if (damage >= Hp)

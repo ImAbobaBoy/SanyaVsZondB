@@ -24,7 +24,7 @@ namespace SanyaVsZondB.Model
                 (action: new Action(() => { Data.IncreaseShootingFrequency(1); }), name: "Увеличить скорость стрельбы на 1 п/с"),
                 (action: new Action(() => 
                 { 
-                    Data.Player.ChangeWeapon(new Rifle(6, 1, 70, 10));
+                    Data.Player.ChangeWeapon(new Rifle(6, 1, 50, 10));
                     Data.Player.Weapon.IncreaseDamage(Data.MultiplierWeaponDamage);
                     Data.Player.Weapon.IncreaseShootingFrequency(Data.AdditionalWeaponShootingFrequency);
                     Data.Player.Weapon.IncreaseCountBulletsInQueue(Data.AdditionalWeaponBulletsInQueue);

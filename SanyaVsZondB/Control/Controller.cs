@@ -9,7 +9,7 @@ namespace SanyaVsZondB.Control
         public LevelForm View { get; private set; }
         public Point Point { get; private set; }
         public Map Map {  get; private set; }
-        public Timer ZondBMoveTimer { get; private set; }
+        public Timer MoveTimer { get; private set; }
         public Timer ZondBHitTimer { get; private set; }
         public Timer ShootTimer { get; private set; }
         public Timer TickTimer { get; private set; }
@@ -32,10 +32,10 @@ namespace SanyaVsZondB.Control
             ZondBHitTimer.Tick += HitZondB;
             ZondBHitTimer.Start();
 
-            ZondBMoveTimer = new Timer();
-            ZondBMoveTimer.Interval = 1;
-            ZondBMoveTimer.Tick += UpdateZombiePositions;
-            ZondBMoveTimer.Start();
+            MoveTimer = new Timer();
+            MoveTimer.Interval = 15;
+            MoveTimer.Tick += UpdateZombiePositions;
+            MoveTimer.Start();
 
             ShootTimer = new Timer();
             ShootTimer.Interval = (int)(1000 / Map.Player.Weapon.ShootingFrequency);
@@ -49,6 +49,29 @@ namespace SanyaVsZondB.Control
             View.KeyUp += View_KeyUp;
             View.MouseDown += MouseDown;
             View.MouseUp += MouseUp;
+        }
+
+        public void MakePause()
+        {
+            if (!IsPaused)
+            {
+                ZondBHitTimer.Stop();
+                MoveTimer.Stop();
+            }
+            else
+            {
+                ZondBHitTimer.Start();
+                MoveTimer.Start();
+            }
+            View.ShowPauseForm();
+            IsPaused = !IsPaused;
+        }
+
+        public void StopTimers()
+        {
+            ShootTimer.Stop();
+            ZondBHitTimer.Stop();
+            MoveTimer.Stop();
         }
 
         private void MouseDown(object sender, MouseEventArgs e)
@@ -66,7 +89,7 @@ namespace SanyaVsZondB.Control
             ShootTimer.Stop();
         }
 
-        public void UpdateZombiePositions(object sender, EventArgs e)
+        private void UpdateZombiePositions(object sender, EventArgs e)
         {
             Map.MoveZondBS();
             if (Map.Bullets.Count > 0)
@@ -81,31 +104,15 @@ namespace SanyaVsZondB.Control
             Map.Player.Move(MoveDirection.None);
         }
 
-        public void Shoot(object sender, EventArgs e)
+        private void Shoot(object sender, EventArgs e)
         {
             Map.ShootByPlayer();
         }
 
-        public void HitZondB(object sender, EventArgs e)
+        private void HitZondB(object sender, EventArgs e)
         {
             Map.HitZondB();
             Map.ShootByFlower();
-        }
-
-        public void MakePause()
-        {
-            if (!IsPaused)
-            {
-                ZondBHitTimer.Stop();
-                ZondBMoveTimer.Stop();
-            }
-            else
-            {
-                ZondBHitTimer.Start();
-                ZondBMoveTimer.Start();
-            }
-            View.ShowPauseForm();
-            IsPaused = !IsPaused;
         }
 
         private void View_KeyDown(object sender, KeyEventArgs e)
