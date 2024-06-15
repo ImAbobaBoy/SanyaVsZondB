@@ -1,6 +1,6 @@
 # SanyaVsZondB
 
-![SanyaVsZondB](readmeImg/mainMenu.png)
+![SanyaVsZondB](readmeImg/mainMenu.jpg)
 
 SanyaVsZondB — это Roguelike Topdown shooter, в котором ваша цель отбиться от толпы злых зондбэ, которые хотят навредить садоводу Сане.
 
